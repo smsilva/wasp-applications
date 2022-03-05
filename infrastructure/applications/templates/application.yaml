@@ -23,7 +23,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: {{ ($application.wave | quote) | default ("100" | quote) }}
 spec:
-  project: {{ $application.project | default "default" }}
+  project: {{ $application.project | default "infra" }}
 
   {{- if $application.source }}
   {{- with $application.source }}

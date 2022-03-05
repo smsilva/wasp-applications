@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+  namespace: argocd
+spec:
+  description: Infrastructure
+
+  sourceRepos:
+    - https://github.com/smsilva/wasp-gitops
+
+  destinations:
+    - name: in-cluster
+      namespace: '*'
+      server: '*'
