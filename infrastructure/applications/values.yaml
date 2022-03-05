@@ -1,5 +1,6 @@
 applications:
   - name: istio-base
+    namespace: istio
     wave: -100
 
 global:
@@ -7,11 +8,6 @@ global:
 
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-
-  source:
-    repoURL: https://github.com/smsilva/wasp-gitops.git
-    targetRevision: HEAD
-    path: infrastructure/charts
 
   destination:
     namespace: default
