@@ -1,6 +1,6 @@
 applications:
-  # - name: namespaces
-  #   wave: -100
+  - name: namespaces
+    wave: -100
 
   - name: istio-base
     namespace: istio
