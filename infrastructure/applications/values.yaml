@@ -2,6 +2,9 @@ applications:
   - name: namespaces
     wave: -100
 
+  - name: ingress-nginx
+    wave: -100
+
   - name: istio-base
     namespace: istio
     wave: -100
