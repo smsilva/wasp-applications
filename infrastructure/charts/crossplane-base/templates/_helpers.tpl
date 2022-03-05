@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "providers.name" -}}
+{{- define "crossplane-base.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "providers.fullname" -}}
+{{- define "crossplane-base.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "providers.chart" -}}
+{{- define "crossplane-base.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "providers.labels" -}}
-helm.sh/chart: {{ include "providers.chart" . }}
-{{ include "providers.selectorLabels" . }}
+{{- define "crossplane-base.labels" -}}
+helm.sh/chart: {{ include "crossplane-base.chart" . }}
+{{ include "crossplane-base.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "providers.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "providers.name" . }}
+{{- define "crossplane-base.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "crossplane-base.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "providers.serviceAccountName" -}}
+{{- define "crossplane-base.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "providers.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "crossplane-base.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
