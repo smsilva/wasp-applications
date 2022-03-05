@@ -1,0 +1,13 @@
+{{- range $controller := .Values.controllers }}
+---
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: {{ $controller.name }}
+  labels:
+    app: crossplane-provider-{{ $controller.name }}
+spec:
+  serviceAccountName: provider-{{ $controller.name }}
+  args:
+    - --debug
+{{- end }}
