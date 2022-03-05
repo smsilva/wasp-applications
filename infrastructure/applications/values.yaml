@@ -6,6 +6,10 @@ applications:
     namespace: crossplane
     wave: -100
 
+  - name: crossplane
+    namespace: crossplane
+    wave: -90
+
   - name: istio-base
     namespace: istio
     wave: -100
