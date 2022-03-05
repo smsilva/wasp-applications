@@ -2,37 +2,17 @@ applications:
   - name: namespaces
     wave: -200
 
-  - name: metrics-server
-    namespace: kube-system
-    wave: -200
-
-  - name: ingress-nginx
+  - name: ingress-nginx-kind
     namespace: ingress-nginx
+    wave: -200
+    source:
+      repoURL: https://github.com/smsilva/wasp-gitops.git
+      targetRevision: HEAD
+      path: infrastructure/raw/ingress-nginx-kind
+
+  - name: argocd-config
+    namespace: argocd
     wave: -100
-
-  - name: istio-base
-    namespace: istio
-    wave: -100
-
-  - name: istio
-    namespace: istio
-    wave: -100
-
-  - name: external-secrets
-    namespace: external-secrets
-    wave: -100
-
-  - name: crossplane-install
-    namespace: crossplane
-    wave: -100
-
-  - name: crossplane-base
-    namespace: crossplane
-    wave: -90
-
-  - name: crossplane-providers
-    namespace: crossplane
-    wave: -80
 
 global:
   namespace: argocd

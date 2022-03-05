@@ -1,0 +1,56 @@
+applications:
+  - name: namespaces
+    wave: -200
+
+  - name: argocd-config
+    namespace: argocd
+    wave: -200
+
+  - name: metrics-server
+    namespace: kube-system
+    wave: -200
+
+  - name: ingress-nginx
+    namespace: ingress-nginx
+    wave: -100
+
+  - name: istio-base
+    namespace: istio
+    wave: -100
+
+  - name: istio
+    namespace: istio
+    wave: -100
+
+  - name: external-secrets
+    namespace: external-secrets
+    wave: -100
+
+  - name: crossplane-install
+    namespace: crossplane
+    wave: -100
+
+  - name: crossplane-base
+    namespace: crossplane
+    wave: -90
+
+  - name: crossplane-providers
+    namespace: crossplane
+    wave: -80
+
+global:
+  namespace: argocd
+
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+  destination:
+    namespace: default
+    name: in-cluster
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
