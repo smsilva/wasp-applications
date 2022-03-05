@@ -68,4 +68,21 @@ spec:
   {{- end }}
   {{- end }}
 
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      jsonPointers:
+        - /status
+
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jsonPointers:
+        - /webhooks/0/namespaceSelector/matchExpressions/2
+      jqPathExpressions:
+        - '.webhooks[]?.failurePolicy'
+
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - '.webhooks[]?.clientConfig.caBundle'
 {{- end }}
