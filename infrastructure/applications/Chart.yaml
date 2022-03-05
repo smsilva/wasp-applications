@@ -1,0 +1,6 @@
+apiVersion: v2
+name: applications
+description: ArgoCD Applications to Manage Helm Charts for Infrastructure
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

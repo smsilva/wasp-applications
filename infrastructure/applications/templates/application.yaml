@@ -1,0 +1,70 @@
+{{- range $application := .Values.applications }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $application.name }}
+  namespace: {{ ($application.namespace | quote) | default ($.Values.global.namespace | quote) }}
+
+  {{- if $application.finalizers }}
+  {{- with $application.finalizers }}
+  
+  finalizers:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- else }}
+  {{- with $.Values.global.finalizers }}
+
+  finalizers:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+
+  annotations:
+    argocd.argoproj.io/sync-wave: {{ ($application.wave | quote) | default ("100" | quote) }}
+spec:
+  project: {{ $application.project | default "default" }}
+
+  {{- if $application.source }}
+  {{- with $application.source }}
+  
+  source:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- else }}
+  {{- with $.Values.global.source }}
+
+  source:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+
+  {{- if $application.destination }}
+  {{- with $application.destination }}
+
+  destination:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- else }}
+  {{- with $.Values.global.destination }}
+
+  destination:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+
+  {{- if $application.syncPolicy }}
+  {{- with $application.syncPolicy }}
+
+  syncPolicy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- else }}
+  {{- with $.Values.global.syncPolicy }}
+
+  syncPolicy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+
+{{- end }}

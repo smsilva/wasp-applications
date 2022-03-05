@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: httpbin
+data:
+  name: {{ .Values.name | quote }}
+  age: {{ .Values.age | quote }}

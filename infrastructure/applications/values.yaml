@@ -1,0 +1,25 @@
+applications:
+  - name: istio-base
+    wave: -100
+
+global:
+  namespace: argocd
+
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+  source:
+    repoURL: https://github.com/smsilva/wasp-gitops.git
+    targetRevision: HEAD
+    path: infrastructure/charts
+
+  destination:
+    namespace: default
+    name: in-cluster
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

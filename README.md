@@ -1,1 +1,1 @@
-# wasp-applications
+# wasp-gitops
