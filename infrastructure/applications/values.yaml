@@ -1,8 +1,13 @@
 applications:
   - name: namespaces
-    wave: -100
+    wave: -200
+
+  - name: metrics-server
+    namespace: kube-system
+    wave: -200
 
   - name: ingress-nginx
+    namespace: ingress-nginx
     wave: -100
 
   - name: istio-base
