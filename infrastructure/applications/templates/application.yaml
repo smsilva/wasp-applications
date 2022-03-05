@@ -4,7 +4,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: {{ $application.name }}
-  namespace: {{ ($application.namespace) | default ($.Values.global.namespace) }}
+  namespace: {{ $.Values.global.namespace }}
 
   {{- if $application.finalizers }}
   {{- with $application.finalizers }}
@@ -49,7 +49,8 @@ spec:
   {{- with $.Values.global.destination }}
 
   destination:
-    {{- toYaml . | nindent 4 }}
+    namespace: {{ ($application.namespace) | default ($.Values.global.destination.namespace) }}
+    name: {{ ($application.cluster) | default ($.Values.global.destination.name) }}
   {{- end }}
   {{- end }}
 

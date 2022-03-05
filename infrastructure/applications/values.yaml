@@ -1,7 +1,10 @@
 applications:
+  # - name: namespaces
+  #   wave: -100
+
   - name: istio-base
     namespace: istio
-    wave: -100
+    wave: -90
 
 global:
   namespace: argocd
