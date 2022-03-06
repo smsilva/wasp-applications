@@ -1,0 +1,4 @@
+global:
+  environment:
+    id: wasp-dev-na-north-1
+    domain: wasp.dev.na.silvios.me
