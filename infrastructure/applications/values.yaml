@@ -15,6 +15,10 @@ applications:
     wave: -100
 
 global:
+  environment:
+    id: wasp-sbx-na-north-1
+    domain: wasp.sbx.na.silvios.me
+
   namespace: argocd
 
   finalizers:

@@ -6,4 +6,10 @@ metadata:
   name: {{ $namespace.name }}
   labels:
     istio-injection: {{ ($namespace.istioInjection | quote) | default "false" | quote }}
+    {{- if $.Values.global }}
+    {{- with $.Values.global.environment }}
+    silvios.me/enviroment-id: "{{ (.id) | default "sbx" }}"
+    silvios.me/enviroment-domain: "{{ (.domain) | default "sandbox.silvios.me" }}"
+    {{- end }}
+    {{- end }}
 {{- end }}
