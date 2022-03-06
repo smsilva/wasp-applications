@@ -1,5 +1,5 @@
 bases:
-  - ../base
+  - https://github.com/smsilva/wasp-gitops/kustomize/example/dev?ref=0.2.0
 
 patchesStrategicMerge:
   - overlays/configmap.yaml
