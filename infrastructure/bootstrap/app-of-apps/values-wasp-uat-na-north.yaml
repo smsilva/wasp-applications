@@ -1,0 +1,4 @@
+global:
+  environment:
+    id: wasp-uat-na-north
+    domain: wasp.uat.na.silvios.me
