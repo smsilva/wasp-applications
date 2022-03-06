@@ -1,42 +1,46 @@
 applications:
   - name: namespaces
-    wave: -200
+    wave: 1
 
   - name: argocd-config
     namespace: argocd
-    wave: -200
+    wave: 1
 
   - name: metrics-server
     namespace: kube-system
-    wave: -200
+    wave: 1
 
   - name: ingress-nginx
     namespace: ingress-nginx
-    wave: -100
+    wave: 2
 
   - name: istio-base
     namespace: istio
-    wave: -100
+    wave: 2
 
   - name: istio
     namespace: istio
-    wave: -100
+    wave: 2
 
   - name: external-secrets
     namespace: external-secrets
-    wave: -100
+    wave: 2
 
   - name: crossplane-install
     namespace: crossplane
-    wave: -100
+    wave: 2
 
   - name: crossplane-base
     namespace: crossplane
-    wave: -90
+    wave: 3
 
   - name: crossplane-providers
     namespace: crossplane
-    wave: -80
+    wave: 4
+
+  - name: cert-manager
+    namespace: cert-manager
+    wave: 1
 
 global:
   namespace: argocd
