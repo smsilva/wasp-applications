@@ -1,2 +1,7 @@
 global:
   istioNamespace: istio
+
+istiod:
+  pilot:
+    autoscaleEnabled: false
+    replicas: 1

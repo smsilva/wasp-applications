@@ -1,0 +1,4 @@
+gateway:
+  replicaCount: 1
+  autoscaling:
+    enabled: false

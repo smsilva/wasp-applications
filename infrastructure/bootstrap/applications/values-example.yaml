@@ -16,11 +16,15 @@ applications:
 
   - name: istio-base
     namespace: istio
-    wave: 2
+    wave: 3
 
   - name: istio-istiod
     namespace: istio
-    wave: 2
+    wave: 4
+
+  - name: istio-gateway
+    namespace: istio-ingress
+    wave: 5
 
   - name: external-secrets
     namespace: external-secrets
