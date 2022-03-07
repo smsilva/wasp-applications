@@ -2,3 +2,7 @@ global:
   environment:
     id: wasp-dev-na-eastus2
     domain: wasp.dev.na.silvios.me
+
+helm:
+  files:
+    - values-kind-dev.yaml

@@ -1,6 +1,5 @@
 #/bin/bash
-
-REGION_NAME="wasp-dev-na-eastus2"
+VALUES_FILE="infrastructure/bootstrap/app-of-apps/values-wasp-dev-na-eastus2.yaml"
 
 # Create a Local Kind Cluster 
 kustomize/kind/create-cluster.sh
@@ -9,8 +8,7 @@ kustomize/kind/create-cluster.sh
 kustomize/argocd/install.sh
 
 # Create an ArgoCD Application
-./create-argocd-apps-of-apps.sh \
-  "infrastructure/bootstrap/app-of-apps/values-${REGION_NAME?}.yaml"
+./create-argocd-apps-of-apps.sh "${VALUES_FILE?}"
 
 # Retrieve ArgoCD Information
 ./scripts/argocd_retrieve_initial_admin_password.sh
