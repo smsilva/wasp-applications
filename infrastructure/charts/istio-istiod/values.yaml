@@ -1,5 +1,2 @@
-istiod:
-  enabled: true
-
 global:
   istioNamespace: istio
