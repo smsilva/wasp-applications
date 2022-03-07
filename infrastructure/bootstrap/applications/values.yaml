@@ -1,20 +1,3 @@
-applications:
-  - name: namespaces
-    wave: 1
-
-  - name: argocd-config
-    namespace: argocd
-    wave: 1
-    finalizers: []
-
-  - name: ingress-nginx-kind
-    namespace: ingress-nginx
-    wave: 2
-    source:
-      repoURL: https://github.com/smsilva/wasp-gitops.git
-      targetRevision: HEAD
-      path: infrastructure/raw/ingress-nginx-kind
-
 global:
   environment:
     id: wasp-sbx-na-eastus2

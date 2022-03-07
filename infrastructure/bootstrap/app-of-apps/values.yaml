@@ -2,3 +2,7 @@ global:
   environment:
     id: wasp-sbx-na-eastus2
     domain: wasp.sbx.na.silvios.me
+
+helm:
+  files:
+    - values-kind.yaml

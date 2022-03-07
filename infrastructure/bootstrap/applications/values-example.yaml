@@ -41,20 +41,3 @@ applications:
   - name: cert-manager
     namespace: cert-manager
     wave: 1
-
-global:
-  namespace: argocd
-
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-
-  destination:
-    namespace: default
-    name: in-cluster
-
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
