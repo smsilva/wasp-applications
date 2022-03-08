@@ -1,5 +1,10 @@
 #/bin/bash
-kubectl apply --filename infrastructure/project.yaml
+NAMESPACE=${1-argocd-infra}
+
+kubectl \
+  apply \
+  --namespace ${NAMESPACE} \
+  --filename infrastructure/project.yaml
 
 VALUES_FILE=${1}
 

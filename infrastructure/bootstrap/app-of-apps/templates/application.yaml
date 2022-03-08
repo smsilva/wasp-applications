@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-of-apps-infra
-  namespace: argocd
+  namespace: {{ $.Values.global.environment.namespace }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -28,7 +28,7 @@ spec:
 
   destination:
     name: in-cluster
-    namespace: argocd
+    namespace: {{ $.Values.global.environment.namespace }}
 
   syncPolicy:
     automated:

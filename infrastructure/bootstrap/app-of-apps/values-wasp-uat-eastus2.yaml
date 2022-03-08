@@ -1,0 +1,4 @@
+global:
+  environment:
+    id: wasp-uat-eastus2
+    domain: wasp-uat.eastus2.silvios.me

@@ -7,7 +7,13 @@ metadata:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:
+  {{- if $.Values.global }}
+  {{- with $.Values.global.environment }}
+  url: "argocd.{{ (.domain) | default "argocd.example.com" }}"
+  {{- end }}
+  {{- else }}
   url: argocd.example.com
+  {{- end }}
 
   resource.customizations.health.argoproj.io_Application: |
     hs = {}

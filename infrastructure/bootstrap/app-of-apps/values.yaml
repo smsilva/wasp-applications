@@ -1,7 +1,8 @@
 global:
   environment:
-    id: wasp-sbx-na-eastus2
-    domain: wasp.sbx.na.silvios.me
+    id: wasp-sandbox-eastus2
+    domain: wasp-sandbox.eastus2.silvios.me
+    namespace: argocd-infra
 
 helm:
   files:

@@ -1,11 +1,18 @@
 #!/bin/bash
 SCRIPT_PATH="$(dirname $0)"
 
-kubectl apply --kustomize ${SCRIPT_PATH}/base
+NAMESPACE=${1-argocd-infra}
 
-for DEPLOYMENT_NAME in $(kubectl -n argocd get deploy -o name); do
+kubectl create namespace ${NAMESPACE}
+
+kubectl \
+  apply \
+  --namespace ${NAMESPACE} \
+  --kustomize ${SCRIPT_PATH}/base
+
+for DEPLOYMENT_NAME in $(kubectl --namespace ${NAMESPACE} get deploy -o name); do
   kubectl \
-    --namespace argocd \
+    --namespace ${NAMESPACE} \
     wait \
     --for condition=Available \
     --timeout=360s \

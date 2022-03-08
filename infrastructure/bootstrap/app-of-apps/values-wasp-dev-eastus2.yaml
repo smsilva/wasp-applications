@@ -1,7 +1,7 @@
 global:
   environment:
-    id: wasp-dev-na-eastus2
-    domain: wasp.dev.na.silvios.me
+    id: wasp-dev-eastus2
+    domain: wasp-dev.eastus2.silvios.me
 
 helm:
   files:
