@@ -11,7 +11,7 @@ applications:
       path: infrastructure/raw/ingress-nginx-kind
 
   - name: argocd-config
-    namespace: argocd
+    namespace: argocd-infra
     wave: 2
     finalizers: []
 

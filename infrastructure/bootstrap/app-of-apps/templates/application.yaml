@@ -12,7 +12,7 @@ spec:
     repoURL: https://github.com/smsilva/wasp-gitops
     path: infrastructure/bootstrap/applications
     targetRevision: HEAD
-  {{- with $.Values.global.environment }}
+    {{- with $.Values.global.environment }}
     helm:
       {{- if $.Values.helm }}
       valueFiles:
@@ -24,7 +24,7 @@ spec:
         global:
           environment:
           {{- toYaml . | nindent 12 }}
-  {{- end }}
+    {{- end }}
 
   destination:
     name: in-cluster

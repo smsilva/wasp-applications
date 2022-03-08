@@ -2,8 +2,7 @@ global:
   environment:
     id: wasp-sbx-na-eastus2
     domain: wasp.sbx.na.silvios.me
-
-  namespace: argocd
+    namespace: argocd-infra
 
   finalizers:
     - resources-finalizer.argocd.argoproj.io
