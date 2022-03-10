@@ -11,7 +11,7 @@ helm repo update argo
 
 helm upgrade \
   --install \
-  --namespace ${ARGOCD_NAMESPACE?} \
+  --namespace ${NAMESPACE?} \
   --create-namespace \
   --version ${ARGOCD_HELM_CHART_VERSION} \
   argocd argo/argo-cd \

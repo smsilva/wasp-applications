@@ -1,0 +1,5 @@
+applications:
+  - name: argocd-config
+    namespace: argocd-infra
+    wave: 2
+    finalizers: []

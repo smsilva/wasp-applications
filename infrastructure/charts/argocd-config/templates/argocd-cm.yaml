@@ -8,8 +8,8 @@ metadata:
     app.kubernetes.io/part-of: argocd
 data:
   {{- if $.Values.global }}
-  {{- with $.Values.global.environment }}
-  url: "argocd.{{ (.domain) | default "argocd.example.com" }}"
+  {{- with $.Values.global.environment.argocd }}
+  url: "{{ .cname }}.{{ .domain }}"
   {{- end }}
   {{- else }}
   url: argocd.example.com
