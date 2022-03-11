@@ -13,6 +13,22 @@ aks-cluster/create.sh "wasp-sbx-na-eus2-aks-a"
 # Install NGINX Ingress Controller
 ../install/ingress-nginx/install.sh
 
+# Install External DNS
+EXTERNAL_DNS_AZURE_FILE="${CREDENTIALS_DIRECTORY}/azure/azure.json"
+
+cat <<EOF > "${EXTERNAL_DNS_AZURE_FILE?}"
+{
+  "tenantId": "${ARM_TENANT_ID}",
+  "subscriptionId": "${ARM_SUBSCRIPTION_ID}",
+  "resourceGroup": "wasp-foundation",
+  "aadClientId": "${ARM_CLIENT_ID}",
+  "aadClientSecret": "${ARM_CLIENT_SECRET}"
+}
+EOF
+
+kubectl create secret generic \
+  azure-config-file --from-file="${EXTERNAL_DNS_AZURE_FILE?}"
+
 # NGINX Ingress Controller Service Load Balancer
 #                     silvios.me parent zone
 #                wasp.silvios.me child zone
