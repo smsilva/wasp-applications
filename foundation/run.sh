@@ -8,33 +8,20 @@ export NAMESPACE="argocd-infra"
 environment/create.sh
 
 # Create AKS Cluster
-aks-cluster/create.sh "wasp-sbx-na-eus2-aks-a"
+aks-cluster/create.sh "wasp-sbx-na-ceus-aks-a"
 
 # Install NGINX Ingress Controller
 ../install/ingress-nginx/install.sh
 
 # Install External DNS
-EXTERNAL_DNS_AZURE_FILE="${CREDENTIALS_DIRECTORY}/azure/azure.json"
-
-cat <<EOF > "${EXTERNAL_DNS_AZURE_FILE?}"
-{
-  "tenantId": "${ARM_TENANT_ID}",
-  "subscriptionId": "${ARM_SUBSCRIPTION_ID}",
-  "resourceGroup": "wasp-foundation",
-  "aadClientId": "${ARM_CLIENT_ID}",
-  "aadClientSecret": "${ARM_CLIENT_SECRET}"
-}
-EOF
-
-kubectl create secret generic \
-  azure-config-file --from-file="${EXTERNAL_DNS_AZURE_FILE?}"
+../install/external-dns/install.sh
 
 # NGINX Ingress Controller Service Load Balancer
 #                     silvios.me parent zone
 #                wasp.silvios.me child zone
 #        sandbox.wasp.silvios.me child zone
-# argocd.sandbox.wasp.silvios.me CNAME         -> 20.94.97.111 (Load Balancer)
-#    app.sandbox.wasp.silvios.me CNAME         -> 20.94.97.111 (Load Balancer)
+# argocd.sandbox.wasp.silvios.me CNAME
+#    app.sandbox.wasp.silvios.me CNAME
 
 # Deploy httpbin with Ingress
 helm upgrade \
@@ -43,24 +30,11 @@ helm upgrade \
   --create-namespace \
   httpbin ../install/httpbin \
   --set "ingress.enabled=true" \
-  --set "ingress.hosts[0].host=app.sandbox.wasp.silvios.me" \
+  --set "ingress.hosts[0].host=echo.sandbox.wasp.silvios.me" \
   --set "ingress.hosts[0].paths[0].path=/" \
   --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
   --wait
 
-# Install ArgoCd using Helm Chart
+# Install ArgoCD using Helm Chart
 ../install/argocd/install.sh ${NAMESPACE?}
-
-# Create ArgoCd infra Project
-kubectl \
-  apply \
-  --namespace ${NAMESPACE?} \
-  --filename ../infrastructure/project.yaml
-
-helm upgrade \
-  --install \
-  --namespace ${NAMESPACE?} \
-  app-of-apps-infra ../infrastructure/bootstrap/app-of-apps \
-  --values "helm-variables/wasp-sbx-na-eus2-aks-a.yaml"
-
 ../scripts/argocd_retrieve_initial_admin_password.sh
