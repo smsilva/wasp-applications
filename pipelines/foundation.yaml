@@ -46,15 +46,29 @@ steps:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
 
+  - task: KubectlInstaller@0
+    inputs:
+      kubectlVersion: 'v1.23.4'
+
+  - script: |
+      mkdir -p ${HOME}/.kube/config
+      env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue apply -auto-approve
+      env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue output -raw kubeconfig > ${HOME}/.kube/config
+      chmod 0600 ${HOME}/.kube/config
+
+      kubectl config get-contexts
+      kubectl get namespaces
+    displayName: 'AKS Cluster Creation'
+    env:
+      ENVIRONMENT_NAME:  ${{ parameters.environment }}
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
+
   - task: HelmInstaller@1
     displayName: "Helm Install"
     inputs:
       helmVersionToInstall: "v3.8.0"
 
   - script: |
-      helm version
-      
-      echo ""
-      
-      find
+      install/ingress-nginx/install.sh
     displayName: "Install NGINX Ingress Controller"
