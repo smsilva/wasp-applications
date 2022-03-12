@@ -6,7 +6,6 @@
 **/*.swp
 **/*output.json
 **/credentials.json
-**/terraform.*
 **/terraform.tfstate
 **/terraform.tfstate.backup
 log/

@@ -1,0 +1,4 @@
+variables:
+  isPR:                           ${{ eq(variables['Build.Reason'], 'PullRequest') }}
+  isMain:                         ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+  isManual:                       ${{ eq(variables['Build.Reason'], 'Manual') }}

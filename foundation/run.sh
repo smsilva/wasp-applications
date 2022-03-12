@@ -4,11 +4,14 @@ export DEBUG=1
 export ENVIRONMENT_NAME="wasp-sbx-na"
 export NAMESPACE="argocd-infra"
 
-# Create Azure Key Vaults on each region
+# Create Azure Key Vaults for each region
 environment/create.sh
 
 # Create AKS Cluster
-aks-cluster/create.sh "wasp-sbx-na-ceus-aks-a"
+env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue apply -auto-approve
+env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue output -raw kubeconfig > ${HOME}/.kube/config
+
+chmod 0600 ${HOME}/.kube/config
 
 # Install NGINX Ingress Controller
 ../install/ingress-nginx/install.sh
@@ -37,4 +40,6 @@ helm upgrade \
 
 # Install ArgoCD using Helm Chart
 ../install/argocd/install.sh ${NAMESPACE?}
+
+# Retrieve ArgoCD Initial Password
 ../scripts/argocd_retrieve_initial_admin_password.sh

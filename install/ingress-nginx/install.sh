@@ -1,4 +1,6 @@
 #!/bin/bash
+echo ""
+
 SCRIPT_PATH="$(dirname $0)"
 
 NAMESPACE=${1-ingress-nginx}

@@ -1,4 +1,6 @@
 #!/bin/bash
+echo ""
+
 SCRIPT_PATH="$(dirname $0)"
 
 EXTERNAL_DNS_AZURE_FILE="${CREDENTIALS_DIRECTORY?}/azure/azure.json"

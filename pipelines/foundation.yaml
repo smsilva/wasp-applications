@@ -1,0 +1,40 @@
+name: $(Date:yyyy-MM-dd)$(Rev:.r)
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name:     environment
+    type:     string
+    default:  wasp-sbx-na
+
+variables:
+  - template: vars/global.yaml
+
+steps:
+  - script: |
+      echo "[INFO] Pipeline.............: CI"
+      echo "[INFO] Build.BuildId........: $(Build.BuildId)"
+      echo "[INFO] Build.BuildNumber....: $(Build.BuildNumber)"
+      echo "[INFO] Build.DefinitionName.: $(Build.DefinitionName)"
+      echo "[INFO] Environment..........: ${ENVIRONMENT_NAME}"
+    displayName: 'Parameters'
+    env:
+      ENVIRONMENT_NAME: ${{ parameters.environment }}
+
+  - script: |
+      pwd
+
+      echo ""
+
+      export STACK_INSTANCE_NAME=${ENVIRONMENT_NAME}
+
+      stackrun silviosilva/azure-wasp-foundation:0.1.0 apply \
+        -auto-approve \
+        -var="name=${ENVIRONMENT_NAME}"
+
+    displayName: 'List files'
+    env:
+      ENVIRONMENT_NAME: ${{ parameters.environment }}

@@ -1,0 +1,36 @@
+#!/bin/bash
+clear
+
+SCRIPT_DIRECTORY="${PWD}/$(dirname $0)"
+
+export STACK_INSTANCE_NAME="${1-wasp-sbx-eus2-blue}"
+export AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION="3.9.0"
+export AZURE_KUBERNETES_CLUSTER_IMAGE_NAME="silviosilva/azure-kubernetes-cluster"
+export DOCKER_BUILD_CONTEXT="${HOME}/trash/docker/build_context"
+
+mkdir -p "${DOCKER_BUILD_CONTEXT}"
+
+echo "STACK_INSTANCE_NAME....................: ${STACK_INSTANCE_NAME}"
+echo "AZURE_KUBERNETES_CLUSTER_IMAGE_NAME....: ${AZURE_KUBERNETES_CLUSTER_IMAGE_NAME}"
+echo "AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION.: ${AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION}"
+echo "DOCKER_BUILD_CONTEXT...................: ${DOCKER_BUILD_CONTEXT}"
+echo ""
+
+cp tfvars-files/wasp-base.tfvars              "${DOCKER_BUILD_CONTEXT}/base.tfvars"
+cp tfvars-files/${STACK_INSTANCE_NAME}.tfvars "${DOCKER_BUILD_CONTEXT}/extra.tfvars"
+
+envsubst < Dockerfile.template > "${DOCKER_BUILD_CONTEXT}/Dockerfile"
+
+find "${DOCKER_BUILD_CONTEXT}"
+
+echo ""
+
+NEW_IMAGE_TAG="${AZURE_KUBERNETES_CLUSTER_IMAGE_NAME}:${AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION}-${STACK_INSTANCE_NAME}"
+
+docker build \
+  -t ${NEW_IMAGE_TAG} \
+  "${DOCKER_BUILD_CONTEXT}"
+
+echo ""
+
+echo "env DEBUG=2 stackrun ${NEW_IMAGE_TAG} plan"
