@@ -81,3 +81,9 @@ steps:
   - script: |
       install/ingress-nginx/install.sh
     displayName: "Install NGINX Ingress Controller"
+
+  - script: |
+      install/external-dns/install.sh
+    displayName: "Install ExternalDNS"
+    env:
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
