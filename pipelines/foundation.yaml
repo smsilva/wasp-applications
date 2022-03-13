@@ -16,16 +16,15 @@ variables:
 
 steps:
   - template: common/steps/install-terraform-packager.yaml
-
+    
   - script: |
       env \
         STACK_INSTANCE_NAME=${ENVIRONMENT_NAME} \
         DEBUG=2 \
-          stackrun silviosilva/azure-wasp-foundation:0.1.0 apply \
-          -auto-approve \
+          stackrun silviosilva/azure-wasp-foundation:0.1.0 plan \
           -var="name=${ENVIRONMENT_NAME}"
 
-    displayName: 'Environment Stack'
+    displayName: 'Environment Foundation'
     env:
       ENVIRONMENT_NAME:  ${{ parameters.environment }}
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -37,7 +36,7 @@ steps:
       kubectlVersion: 'v1.23.4'
 
   - script: |
-      env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue apply -auto-approve
+      env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue plan
     displayName: 'AKS Creation'
     env:
       ENVIRONMENT_NAME:  ${{ parameters.environment }}
@@ -59,10 +58,7 @@ steps:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
 
-  - task: HelmInstaller@1
-    displayName: "Helm Install"
-    inputs:
-      helmVersionToInstall: "v3.8.0"
+  - template: common/steps/install-helm.yaml
 
   - script: |
       install/ingress-nginx/install.sh

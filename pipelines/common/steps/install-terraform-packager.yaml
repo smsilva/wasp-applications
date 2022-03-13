@@ -5,12 +5,9 @@ steps:
       echo "[INFO] Build.BuildId........: $(Build.BuildId)"
       echo "[INFO] Build.BuildNumber....: $(Build.BuildNumber)"
       echo "[INFO] Build.DefinitionName.: $(Build.DefinitionName)"
-      echo "[INFO] Environment..........: ${ENVIRONMENT_NAME}"
 
       echo "##vso[task.setvariable variable=PATH]${AGENT_PATH}"
-    displayName: 'Parameters'
-    env:
-      ENVIRONMENT_NAME: ${{ parameters.environment }}
+    displayName: 'Config PATH'
 
   - script: |
       git clone https://github.com/smsilva/terraform-packager.git $(Agent.TempDirectory)/terraform-packager
