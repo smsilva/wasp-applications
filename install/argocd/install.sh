@@ -13,7 +13,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 
 helm repo update argo
 
-ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
+ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID-5b59d3e0-04f4-4be4-aff4-b159a8ed4b46}"
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
 fullnameOverride: "argocd"
@@ -49,4 +49,5 @@ helm upgrade \
   --create-namespace \
   argocd argo/argo-cd \
   --values "${ARGOCD_HELM_FILE_SERVICE?}" \
+  --values "${SCRIPT_PATH}/extra-objects.yaml" \
   --wait
