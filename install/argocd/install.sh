@@ -8,6 +8,8 @@ NAMESPACE=${1-argocd-infra}
 ARGOCD_HELM_CHART_VERSION="3.35.2" # ArgoCD v2.2.5
 ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/service.yaml"
 
+mkdir -p "${HOME}/.helm/argocd/"
+
 helm repo add argo https://argoproj.github.io/argo-helm
 
 helm repo update argo
