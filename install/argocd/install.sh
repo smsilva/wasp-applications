@@ -25,8 +25,13 @@ server:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - argocd.sandbox.wasp.silvios.me
+    tls:
+      - secretName: argocd-tls-certificate
+        hosts:
+          - argocd.sandbox.wasp.silvios.me
   config:
     url: https://argocd.sandbox.wasp.silvios.me
     oidc.config: |

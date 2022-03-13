@@ -14,4 +14,7 @@ helm upgrade \
   --namespace cert-manager \
   --create-namespace \
   --set installCRDs=true \
-  cert-manager jetstack/cert-manager
+  cert-manager jetstack/cert-manager \
+  --wait
+
+kubectl --namespace cert-manager apply --filename "${SCRIPT_PATH}/cluster-issuers.yaml"
