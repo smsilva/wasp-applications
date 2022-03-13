@@ -30,10 +30,7 @@ steps:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
 
-  - task: KubectlInstaller@0
-    displayName: 'Install kubectl'
-    inputs:
-      kubectlVersion: 'v1.23.4'
+  - template: common/steps/install-kubectl.yaml
 
   - script: |
       env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue plan

@@ -1,0 +1,5 @@
+steps:
+  - task: KubectlInstaller@0
+    displayName: 'Install kubectl'
+    inputs:
+      kubectlVersion: 'v1.23.4'
