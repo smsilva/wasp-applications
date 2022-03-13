@@ -8,7 +8,6 @@ steps:
       env DEBUG=2 stackrun ${{ parameters.image }} apply
     displayName: 'Provision Kubernetes Cluster'
     env:
-      ENVIRONMENT_NAME:  ${{ parameters.environment }}
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
 
@@ -23,6 +22,5 @@ steps:
       kubectl get namespaces
     displayName: 'Provision Kubernetes Cluster Credentials'
     env:
-      ENVIRONMENT_NAME:  ${{ parameters.environment }}
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
