@@ -5,4 +5,4 @@ steps:
       echo "##vso[task.setvariable variable=PATH]${AGENT_PATH}"
 
       git clone https://github.com/smsilva/terraform-packager.git $(Agent.TempDirectory)/terraform-packager
-    displayName: "Install Terraform Packager"
+    displayName: "Terraform Packager Install"
