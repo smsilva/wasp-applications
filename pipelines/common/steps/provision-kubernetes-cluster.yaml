@@ -5,7 +5,7 @@ parameters:
 
 steps:
   - script: |
-      env DEBUG=2 stackrun ${{ parameters.image }} apply
+      env DEBUG=2 stackrun ${{ parameters.image }} apply --auto-approve
     displayName: 'Provision Kubernetes Cluster'
     env:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
