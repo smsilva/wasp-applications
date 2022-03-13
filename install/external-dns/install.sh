@@ -30,16 +30,6 @@ helm repo update external-dns
 
 helm search repo external-dns
 
-# helm upgrade \
-#   --install \
-#   --namespace external-dns \
-#   external-dns external-dns/external-dns \
-#   --set "provider=azure" \
-#   --set "azure.secretName=azure-config-file" \
-#   --set "podSecurityContext.enabled=true" \
-#   --set "podSecurityContext.runAsUser=0" \
-#   --set "podSecurityContext.fsGroup=0"
-
 helm upgrade \
   --install \
   --namespace external-dns \
