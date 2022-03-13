@@ -1,0 +1,14 @@
+steps:
+  - script: |
+      kubectl -n ingress-nginx get svc
+
+      echo ""
+
+      kubectl -n argocd-infra get ing
+
+      echo ""
+
+      dig @8.8.8.8 argocd.sandbox.wasp.silvios.me
+    displayName: "ArgoCD Information"
+    env:
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
