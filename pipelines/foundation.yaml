@@ -24,7 +24,7 @@ steps:
           stackrun silviosilva/azure-wasp-foundation:0.1.0 plan \
           -var="name=${ENVIRONMENT_NAME}"
 
-    displayName: 'Environment Foundation'
+    displayName: 'Environment Provision'
     env:
       ENVIRONMENT_NAME:  ${{ parameters.environment }}
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -32,28 +32,7 @@ steps:
 
   - template: common/steps/install-kubectl.yaml
 
-  - script: |
-      env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue plan
-    displayName: 'AKS Creation'
-    env:
-      ENVIRONMENT_NAME:  ${{ parameters.environment }}
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
-
-  - script: |
-      mkdir -p ${HOME}/.kube
-
-      env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue output -raw kubeconfig > ${HOME}/.kube/config
-
-      chmod 0600 ${HOME}/.kube/config
-
-      kubectl config get-contexts
-      kubectl get namespaces
-    displayName: 'AKS Get Credentials'
-    env:
-      ENVIRONMENT_NAME:  ${{ parameters.environment }}
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
+  - template: common/steps/install-kubernetes-cluster.yaml
 
   - template: common/steps/install-helm.yaml
 

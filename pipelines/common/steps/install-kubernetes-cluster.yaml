@@ -1,0 +1,23 @@
+steps:
+  - script: |
+      env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue plan
+    displayName: 'AKS Provision'
+    env:
+      ENVIRONMENT_NAME:  ${{ parameters.environment }}
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
+
+  - script: |
+      mkdir -p ${HOME}/.kube
+
+      env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue output -raw kubeconfig > ${HOME}/.kube/config
+
+      chmod 0600 ${HOME}/.kube/config
+
+      kubectl config get-contexts
+      kubectl get namespaces
+    displayName: 'AKS Get Credentials'
+    env:
+      ENVIRONMENT_NAME:  ${{ parameters.environment }}
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
