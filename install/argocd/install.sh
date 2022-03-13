@@ -5,8 +5,7 @@ SCRIPT_PATH="$(dirname $0)"
 
 NAMESPACE=${1-argocd-infra}
 
-ARGOCD_HELM_CHART_VERSION="3.35.2" # ArgoCD v2.2.5
-ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/service.yaml"
+ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
 
 mkdir -p "${HOME}/.helm/argocd/"
 
@@ -32,7 +31,6 @@ helm upgrade \
   --install \
   --namespace ${NAMESPACE?} \
   --create-namespace \
-  --version ${ARGOCD_HELM_CHART_VERSION?} \
   argocd argo/argo-cd \
   --values "${ARGOCD_HELM_FILE_SERVICE?}" \
   --wait
