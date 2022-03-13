@@ -1,5 +1,11 @@
 steps:
   - script: |
+      install/argocd/install.sh
+    displayName: "Install ArgoCD"
+    env:
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+
+  - script: |
       kubectl -n ingress-nginx get svc
 
       echo ""

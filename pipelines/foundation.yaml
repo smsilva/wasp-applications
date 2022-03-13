@@ -69,10 +69,4 @@ steps:
 
   - template: common/steps/install-httpbin.yaml
 
-  - script: |
-      install/argocd/install.sh
-    displayName: "Install ArgoCD"
-    env:
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-
   - template: common/steps/install-argocd.yaml
