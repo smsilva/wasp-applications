@@ -16,19 +16,8 @@ variables:
 
 steps:
   - template: common/steps/install-terraform-packager.yaml
-    
-  - script: |
-      env \
-        STACK_INSTANCE_NAME=${ENVIRONMENT_NAME} \
-        DEBUG=2 \
-          stackrun silviosilva/azure-wasp-foundation:0.1.0 plan \
-          -var="name=${ENVIRONMENT_NAME}"
-
-    displayName: 'Environment Provision'
-    env:
-      ENVIRONMENT_NAME:  ${{ parameters.environment }}
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
+  
+  - template: common/steps/provision-environment.yaml
 
   - template: common/steps/install-kubectl.yaml
 

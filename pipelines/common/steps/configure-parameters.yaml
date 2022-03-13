@@ -1,0 +1,10 @@
+steps:
+  - script: |
+      AGENT_PATH=${PATH}:$(Agent.TempDirectory)/terraform-packager/scripts
+
+      echo "[INFO] Build.BuildId........: $(Build.BuildId)"
+      echo "[INFO] Build.BuildNumber....: $(Build.BuildNumber)"
+      echo "[INFO] Build.DefinitionName.: $(Build.DefinitionName)"
+
+      echo "##vso[task.setvariable variable=PATH]${AGENT_PATH}"
+    displayName: 'Config PATH'
