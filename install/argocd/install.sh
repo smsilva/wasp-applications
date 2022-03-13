@@ -34,13 +34,5 @@ helm upgrade \
   --create-namespace \
   --version ${ARGOCD_HELM_CHART_VERSION?} \
   argocd argo/argo-cd \
-  --values "${ARGOCD_HELM_FILE_SERVICE?}"
-
-for DEPLOYMENT_NAME in $(kubectl --namespace ${NAMESPACE?} get deploy -o name); do
-  kubectl \
-    --namespace ${NAMESPACE?} \
-    wait \
-    --for condition=Available \
-    --timeout=360s \
-    "${DEPLOYMENT_NAME?}";
-done
+  --values "${ARGOCD_HELM_FILE_SERVICE?}" \
+  --wait
