@@ -13,7 +13,8 @@ steps:
       env \
         STACK_INSTANCE_NAME=${ENVIRONMENT_NAME?} \
         DEBUG=2 \
-          stackrun silviosilva/azure-wasp-foundation:0.1.0 plan \
+          stackrun silviosilva/azure-wasp-foundation:0.1.0 apply \
+          --auto-approve \
           -var="name=${ENVIRONMENT_NAME?}"
 
     displayName: 'Provision Environment'

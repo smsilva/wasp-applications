@@ -1,6 +1,11 @@
+parameters:
+  - name:    image
+    type:    string
+    default: silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue
+
 steps:
   - script: |
-      env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue plan
+      env DEBUG=2 stackrun ${{ parameters.image }} apply
     displayName: 'Provision Kubernetes Cluster'
     env:
       ENVIRONMENT_NAME:  ${{ parameters.environment }}
@@ -10,7 +15,7 @@ steps:
   - script: |
       mkdir -p ${HOME}/.kube
 
-      env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue output -raw kubeconfig > ${HOME}/.kube/config
+      env DEBUG=0 stackrun ${{ parameters.image }} output -raw kubeconfig > ${HOME}/.kube/config
 
       chmod 0600 ${HOME}/.kube/config
 
