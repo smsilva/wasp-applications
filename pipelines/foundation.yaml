@@ -57,9 +57,7 @@ steps:
 
   - template: common/steps/install-helm.yaml
 
-  - script: |
-      install/ingress-nginx/install.sh
-    displayName: "Install NGINX Ingress Controller"
+  - template: common/steps/install-nginx-ingress-controller.yaml
 
   - script: |
       install/external-dns/install.sh

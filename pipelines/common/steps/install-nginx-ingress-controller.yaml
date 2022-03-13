@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      install/ingress-nginx/install.sh
+    displayName: "Install NGINX Ingress Controller"
