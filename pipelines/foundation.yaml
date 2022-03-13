@@ -15,20 +15,17 @@ variables:
   - group: azure-credentials-wasp-sandbox
 
 steps:
+  - template: common/steps/install-helm.yaml
+  - template: common/steps/install-kubectl.yaml
   - template: common/steps/install-terraform-packager.yaml
   
   - template: common/steps/provision-environment.yaml
+    parameters:
+      environment: ${{ parameters.environment }}
 
-  - template: common/steps/install-kubectl.yaml
-
-  - template: common/steps/install-kubernetes-cluster.yaml
-
-  - template: common/steps/install-helm.yaml
+  - template: common/steps/provision-kubernetes-cluster.yaml
 
   - template: common/steps/install-nginx-ingress-controller.yaml
-
   - template: common/steps/install-external-dns.yaml
-
   - template: common/steps/install-httpbin.yaml
-
   - template: common/steps/install-argocd.yaml

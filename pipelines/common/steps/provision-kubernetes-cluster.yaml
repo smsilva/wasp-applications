@@ -1,7 +1,7 @@
 steps:
   - script: |
       env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue plan
-    displayName: 'AKS Provision'
+    displayName: 'Provision Kubernetes Cluster'
     env:
       ENVIRONMENT_NAME:  ${{ parameters.environment }}
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
@@ -16,7 +16,7 @@ steps:
 
       kubectl config get-contexts
       kubectl get namespaces
-    displayName: 'AKS Get Credentials'
+    displayName: 'Provision Kubernetes Cluster Credentials'
     env:
       ENVIRONMENT_NAME:  ${{ parameters.environment }}
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
