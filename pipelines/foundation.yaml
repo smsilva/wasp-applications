@@ -47,6 +47,7 @@ steps:
       ARM_ACCESS_KEY:    $(ARM_ACCESS_KEY)
 
   - task: KubectlInstaller@0
+    displayName: 'Install kubectl'
     inputs:
       kubectlVersion: 'v1.23.4'
 
@@ -87,3 +88,20 @@ steps:
     displayName: "Install ExternalDNS"
     env:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+
+  - script: |
+      kubectl -n ingress-nginx get svc
+
+      echo ""
+
+      helm upgrade \
+        --install \
+        --namespace httpbin \
+        --create-namespace \
+        httpbin install/httpbin \
+        --set "ingress.enabled=true" \
+        --set "ingress.hosts[0].host=echo.sandbox.wasp.silvios.me" \
+        --set "ingress.hosts[0].paths[0].path=/" \
+        --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
+        --wait
+    displayName: "Deploy httpbin with Ingress"
