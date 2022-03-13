@@ -1,7 +1,7 @@
 steps:
   - script: |
       install/argocd/install.sh
-    displayName: "Install ArgoCD"
+    displayName: "ArgoCD Install"
     env:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
 

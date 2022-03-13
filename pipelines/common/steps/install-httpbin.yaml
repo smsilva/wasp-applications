@@ -14,4 +14,4 @@ steps:
         --set "ingress.hosts[0].paths[0].path=/" \
         --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
         --wait
-    displayName: "Deploy httpbin with Ingress"
+    displayName: "httpbin Install"
