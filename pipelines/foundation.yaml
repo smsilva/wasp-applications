@@ -38,11 +38,7 @@ steps:
 
   - template: common/steps/install-nginx-ingress-controller.yaml
 
-  - script: |
-      install/external-dns/install.sh
-    displayName: "Install ExternalDNS"
-    env:
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+  - template: common/steps/install-external-dns.yaml
 
   - template: common/steps/install-httpbin.yaml
 

@@ -1,0 +1,6 @@
+steps:
+  - script: |
+      install/external-dns/install.sh
+    displayName: "Install ExternalDNS"
+    env:
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
