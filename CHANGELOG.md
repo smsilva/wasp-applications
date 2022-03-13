@@ -1,3 +1,48 @@
+## 0.4.0 (2022-03-13)
+
+### Refactor
+
+- **pipelines/common/steps/install-terraform-packager.yaml**: Step terraform-packager rename Display Name
+- **pipelines**: Provision Environment with Parameter
+- **common/steps/**: Update steps displayName
+- **common/steps/**: Update steps displayName
+- **pipelines**: Refactor to extract common/steps/install-argocd.yaml
+- **httpbin/raw**: Remove Directory
+
+### Fix
+
+- **pipelines/common/steps/provision-kubernetes-cluster.yaml**: Add -auto-approve to apply
+- **pipelines/common/steps/provision-kubernetes-cluster.yaml**: Remove environment parameter reference
+- **pipelines/foundation.yaml**: AKS Get Credentials
+
+### Feat
+
+- **pipelines/common/steps/provision***: Refactor to use apply again
+- **foundation/aks-cluster/docker/Dockerfile.template**: Set STACK_INSTANCE_NAME as immutable
+- **pipelines**: Refactor to extract common/steps/provision-environment.yaml
+- **pipelines**: Refactor to extract common/steps/install-external-dns.yaml
+- **pipelines**: Refactor to extract common/steps/install-kubernetes-cluster.yaml
+- **pipelines**: Refactor to extract common/steps/install-nginx-ingress-controller.yaml
+- **pipelines**: Refactor to extract common/steps/install-kubectl.yaml
+- **pipelines**: Refactor to extract common/steps/install-argocd.yaml
+- **pipelines**: Refactor to extract common/steps/install-httpbin.yaml
+- **pipelines**: Refactor to extract common/steps/install-helm.yaml
+- **pipelines**: Refactor to extract common/steps/install-terraform-packager.yaml
+- **pipelines/foundation.yaml**: Install ArgoCD
+- **pipelines/foundation.yaml**: Install httpbin Helm Chart
+- **pipelines/foundation.yaml**: Install ExternalDNS
+- **pipelines/foundation.yaml**: Install NGINX Ingress Controller
+- **pipelines**: Update Foundation Pipeline
+- **pipelines**: Foundation
+- **run.sh**: External DNS commands
+- **charts**: Add httpbin Helm Chart with Ingress
+- **foundation/**: Add an AKS Cluster
+- **foundation/**: Create directory with scripts to generate an new environment
+- **install/**: ArgoCD Install using Helm
+- **root**: Customize ArgoCD Namespace
+- **infrastructure/**: Rename values files and update parameters
+- **infrastructure/argocd-application.yaml**: Remove file
+
 ## 0.3.0 (2022-03-06)
 
 ### Feat
