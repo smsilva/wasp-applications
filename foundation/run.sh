@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# NGINX Ingress Controller Service Load Balancer
+#                                     silvios.me PARENT_ZONE
+#                                wasp.silvios.me CHILD_ZONE
+#                        sandbox.wasp.silvios.me CHILD_ZONE
+#                eastus2.sandbox.wasp.silvios.me CHILD_ZONE
+#              centralus.sandbox.wasp.silvios.me CHILD_ZONE
+# argocd-green                                   CNAME
+# argocd-blue                                    CNAME
+
 # Create an Environment with two Regions
 env DEBUG=2 stackrun silviosilva/azure-wasp-foundation:0.1.0-wasp-sbx-na \
   apply -auto-approve
@@ -28,26 +37,9 @@ chmod 0600 ${HOME}/.kube/config
 # Install cert-manager
 ../install/cert-manager/install.sh
 
-# NGINX Ingress Controller Service Load Balancer
-#                                     silvios.me parent zone
-#                                wasp.silvios.me child zone
-#                        sandbox.wasp.silvios.me child zone
-#                eastus2.sandbox.wasp.silvios.me child zone
-#              centralus.sandbox.wasp.silvios.me child zone
-# argocd-green                                   CNAME
-# argocd-blue                                    CNAME
-
-# Deploy httpbin with Ingress
-helm upgrade \
-  --install \
-  --namespace httpbin \
-  --create-namespace \
-  httpbin ../install/httpbin \
-  --set "ingress.enabled=true" \
-  --set "ingress.hosts[0].host=echo.eastus2.sandbox.wasp.silvios.me" \
-  --set "ingress.hosts[0].paths[0].path=/" \
-  --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
-  --wait
+# Deploy httpbin with Ingress:
+#   - httpbin.eastus2.sandbox.wasp.silvios.me
+../install/httpbin/install.sh
 
 # Install ArgoCD using Helm Chart
 ../install/argocd/install.sh argocd-infra
