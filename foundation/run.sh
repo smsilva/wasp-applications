@@ -1,7 +1,5 @@
 #!/bin/bash
 
-AKS_IMAGE="silviosilva/azure-kubernetes-cluster:3.10.0-wasp-sbx-na-eus2-blue"
-
 # NGINX Ingress Controller Service Load Balancer
 #                                     silvios.me PARENT_ZONE
 #                                wasp.silvios.me CHILD_ZONE
@@ -16,6 +14,8 @@ env DEBUG=2 stackrun silviosilva/azure-wasp-foundation:0.1.0-wasp-sbx-na \
   apply -auto-approve
 
 # Create AKS Cluster
+AKS_IMAGE="silviosilva/azure-kubernetes-cluster:3.10.0-wasp-sbx-na-eus2-blue"
+
 env DEBUG=2 stackrun \
   ${AKS_IMAGE} \
     apply -auto-approve
