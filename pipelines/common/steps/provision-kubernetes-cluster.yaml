@@ -1,7 +1,7 @@
 parameters:
   - name:    image
     type:    string
-    default: silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue
+    default: silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-na-eus2-blue
 
 steps:
   - script: |

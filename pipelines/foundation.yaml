@@ -27,21 +27,21 @@ steps:
 
   - template: common/steps/provision-kubernetes-cluster.yaml
 
-  - template: common/steps/install-nginx-ingress-controller.yaml
-
-  - template: common/steps/install-cert-manager.yaml
-
 # - ARM_CLIENT_ID     -> azurerm-service-principal    / Secret
 # - ARM_CLIENT_SECRET -> azurerm-service-principal    / Secret
 # - ARM_TENANT_ID     -> azure-subscription-key-vault / ClusterSecretStore
 # - ARM_KEYVAULT_NAME -> azure-subscription-key-vault / ClusterSecretStore
   - template: common/steps/install-external-secrets.yaml
 
+  - template: common/steps/install-nginx-ingress-controller.yaml
+
 # - ARM_TENANT_ID       -> azure-config-file / Secret
 # - ARM_SUBSCRIPTION_ID -> azure-config-file / Secret
 # - ARM_CLIENT_ID       -> azure-config-file / Secret
 # - ARM_CLIENT_SECRET   -> azure-config-file / Secret
   - template: common/steps/install-external-dns.yaml
+
+  - template: common/steps/install-cert-manager.yaml
 
 # - ARM_TENANT_ID               -> azure-config-file / Secret
 # - ARGOCD_APP_REGISTRATION_ID  -> argocd-cm         / ConfigMap
