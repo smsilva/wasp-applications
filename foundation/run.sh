@@ -1,11 +1,18 @@
 #!/bin/bash
 
-# Create Azure Key Vaults for each region
-environment/create.sh
+# Create an Environment with two Regions
+env DEBUG=2 stackrun silviosilva/azure-wasp-foundation:0.1.0-wasp-sbx-na \
+  apply -auto-approve
 
 # Create AKS Cluster
-env DEBUG=2 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue apply -auto-approve
-env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-blue output -raw kubeconfig > ${HOME}/.kube/config
+env DEBUG=2 stackrun \
+  silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-na-eus2-blue \
+    apply -auto-approve
+
+env DEBUG=0 stackrun \
+  silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-na-eus2-blue \
+    output \
+      -raw kubeconfig > ${HOME}/.kube/config
 
 chmod 0600 ${HOME}/.kube/config
 

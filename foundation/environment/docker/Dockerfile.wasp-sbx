@@ -1,2 +1,0 @@
-FROM silviosilva/azure-wasp-foundation:0.1.0
-ENV STACK_INSTANCE_NAME_FINAL="wasp-sbx"

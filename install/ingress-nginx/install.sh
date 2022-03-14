@@ -15,12 +15,3 @@ helm upgrade \
   --create-namespace \
   ingress-nginx ingress-nginx/ingress-nginx \
   --wait
-
-for DEPLOYMENT_NAME in $(kubectl --namespace ${NAMESPACE?} get deploy -o name); do
-  kubectl \
-    --namespace ${NAMESPACE?} \
-    wait \
-    --for condition=Available \
-    --timeout=360s \
-    "${DEPLOYMENT_NAME?}";
-done
