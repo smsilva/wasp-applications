@@ -1,6 +1,4 @@
 #!/bin/bash
-clear
-
 SCRIPT_DIRECTORY="${PWD}/$(dirname $0)"
 
 export STACK_INSTANCE_NAME="${1-wasp-sbx-eus2-blue}"
@@ -28,7 +26,8 @@ echo ""
 NEW_IMAGE_TAG="${AZURE_KUBERNETES_CLUSTER_IMAGE_NAME}:${AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION}-${STACK_INSTANCE_NAME}"
 
 docker build \
-  -t ${NEW_IMAGE_TAG} \
+  --rm \
+  --tag ${NEW_IMAGE_TAG} \
   "${DOCKER_BUILD_CONTEXT}"
 
 echo ""
