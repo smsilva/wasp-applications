@@ -1,3 +1,21 @@
+## 0.6.0 (2022-03-14)
+
+### Feat
+
+- **foundation/aks-cluster/**: Update Stack image version
+- **install/argocd/install.sh**: Change CNAME record
+- **install/httpbin**: New script to install httpbin
+
+### Fix
+
+- Update ArgoCD CNAME
+
+### Refactor
+
+- **pipelines/**: Change Installation order
+- **install/external-dns/**: Use External Secrets to retrieve Azure Credentials
+- Foundation run.sh script
+
 ## 0.5.0 (2022-03-14)
 
 ### Feat
