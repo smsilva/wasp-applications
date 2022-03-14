@@ -14,6 +14,8 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update argo
 
 ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID-5b59d3e0-04f4-4be4-aff4-b159a8ed4b46}"
+ARGOCD_HOST="argocd.sandbox.wasp.silvios.me"
+CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-staging"
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
 fullnameOverride: "argocd"
@@ -25,15 +27,15 @@ server:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      cert-manager.io/cluster-issuer: letsencrypt-prod
+      cert-manager.io/cluster-issuer: letsencrypt-staging
     hosts:
-      - argocd.sandbox.wasp.silvios.me
+      - ${ARGOCD_HOST}
     tls:
       - secretName: argocd-tls-certificate
         hosts:
-          - argocd.sandbox.wasp.silvios.me
+          - ${ARGOCD_HOST}
   config:
-    url: https://argocd.sandbox.wasp.silvios.me
+    url: https://${ARGOCD_HOST}
     oidc.config: |
       name: AzureAD
       issuer: https://login.microsoftonline.com/${ARM_TENANT_ID}/v2.0
