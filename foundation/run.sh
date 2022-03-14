@@ -44,7 +44,7 @@ helm upgrade \
   --create-namespace \
   httpbin ../install/httpbin \
   --set "ingress.enabled=true" \
-  --set "ingress.hosts[0].host=echo.sandbox.wasp.silvios.me" \
+  --set "ingress.hosts[0].host=echo.eastus2.sandbox.wasp.silvios.me" \
   --set "ingress.hosts[0].paths[0].path=/" \
   --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
   --wait
