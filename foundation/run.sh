@@ -42,6 +42,7 @@ chmod 0600 ${HOME}/.kube/config
 ../install/httpbin/install.sh
 
 # Install ArgoCD using Helm Chart
+#   - argocd-green.eastus2.sandbox.wasp.silvios.me
 ../install/argocd/install.sh argocd-infra
 
 # Retrieve ArgoCD Initial Password
