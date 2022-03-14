@@ -14,7 +14,7 @@ steps:
 
       echo ""
 
-      dig @8.8.8.8 argocd.sandbox.wasp.silvios.me
+      dig @8.8.8.8 argocd-blue.eastus2.sandbox.wasp.silvios.me
     displayName: "ArgoCD Information"
     env:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)

@@ -14,7 +14,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update argo
 
 ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID-5b59d3e0-04f4-4be4-aff4-b159a8ed4b46}"
-ARGOCD_HOST="argocd-green.eastus2.sandbox.wasp.silvios.me"
+ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
 CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-staging"
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
