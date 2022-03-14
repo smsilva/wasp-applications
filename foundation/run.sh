@@ -1,9 +1,5 @@
 #!/bin/bash
 
-export DEBUG=1
-export ENVIRONMENT_NAME="wasp-sbx-na"
-export NAMESPACE="argocd-infra"
-
 # Create Azure Key Vaults for each region
 environment/create.sh
 
@@ -13,18 +9,26 @@ env DEBUG=0 stackrun silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-eus2-bl
 
 chmod 0600 ${HOME}/.kube/config
 
+# Install External Secrets
+../install/external-secrets/install.sh
+
 # Install NGINX Ingress Controller
 ../install/ingress-nginx/install.sh
 
 # Install External DNS
 ../install/external-dns/install.sh
 
+# Install cert-manager
+../install/cert-manager/install.sh
+
 # NGINX Ingress Controller Service Load Balancer
-#                     silvios.me parent zone
-#                wasp.silvios.me child zone
-#        sandbox.wasp.silvios.me child zone
-# argocd.sandbox.wasp.silvios.me CNAME
-#    app.sandbox.wasp.silvios.me CNAME
+#                                     silvios.me parent zone
+#                                wasp.silvios.me child zone
+#                        sandbox.wasp.silvios.me child zone
+#                eastus2.sandbox.wasp.silvios.me child zone
+#              centralus.sandbox.wasp.silvios.me child zone
+# argocd-green                                   CNAME
+# argocd-blue                                    CNAME
 
 # Deploy httpbin with Ingress
 helm upgrade \
@@ -39,7 +43,7 @@ helm upgrade \
   --wait
 
 # Install ArgoCD using Helm Chart
-../install/argocd/install.sh ${NAMESPACE?}
+../install/argocd/install.sh argocd-infra
 
 # Retrieve ArgoCD Initial Password
 ../scripts/argocd_retrieve_initial_admin_password.sh

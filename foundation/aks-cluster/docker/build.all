@@ -1,0 +1,5 @@
+#!/bin/bash
+clear
+
+./build wasp-sbx-eus2-blue
+./build wasp-sbx-eus2-green
