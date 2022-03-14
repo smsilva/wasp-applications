@@ -1,3 +1,25 @@
+## 0.5.0 (2022-03-14)
+
+### Feat
+
+- Update foundation scripts
+- **install/argocd**: Enable Lets Encrypt ArgoCD Certificate
+- **pipelines**: Add steps to install cert-manager and external-secrets
+- **install/argocd/**: Configure ArgoCD AzureAD SSO
+- **install/cert-manager/install.sh**: Install cert-manager
+- **install/external-secrets/install.sh**: Install external-secrets
+- **install/argocd/install.sh**: Add Azure SSO Config
+
+### Refactor
+
+- **foundation/aks-cluster/docker/build**: Remove intermediate containers after build
+- **pipelines**: Add comments to show Parameters
+- **install/cert-manager/cluster-issuers.yaml**: Indent yaml
+- **install/external-dns/install.sh**: Add Helm --wait
+- **install/argocd/install.sh**: Update to use latest version
+- **install/argocd/install.sh**: Remove wait with for and use only Helm --wait
+- **install/external-dns/install.sh**: Remove comments
+
 ## 0.4.0 (2022-03-13)
 
 ### Refactor
