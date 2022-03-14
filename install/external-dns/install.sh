@@ -34,4 +34,5 @@ helm upgrade \
   --install \
   --namespace external-dns \
   external-dns external-dns/external-dns \
-  --values "${SCRIPT_PATH}/values.yaml"
+  --values "${SCRIPT_PATH}/values.yaml" \
+  --wait
