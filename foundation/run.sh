@@ -1,13 +1,15 @@
 #!/bin/bash
 
+AKS_IMAGE="silviosilva/azure-kubernetes-cluster:3.10.0-wasp-sbx-na-eus2-blue"
+
 # NGINX Ingress Controller Service Load Balancer
 #                                     silvios.me PARENT_ZONE
 #                                wasp.silvios.me CHILD_ZONE
 #                        sandbox.wasp.silvios.me CHILD_ZONE
 #                eastus2.sandbox.wasp.silvios.me CHILD_ZONE
 #              centralus.sandbox.wasp.silvios.me CHILD_ZONE
-# argocd-green                                   CNAME
 # argocd-blue                                    CNAME
+# argocd-green                                   CNAME
 
 # Create an Environment with two Regions
 env DEBUG=2 stackrun silviosilva/azure-wasp-foundation:0.1.0-wasp-sbx-na \
@@ -15,11 +17,11 @@ env DEBUG=2 stackrun silviosilva/azure-wasp-foundation:0.1.0-wasp-sbx-na \
 
 # Create AKS Cluster
 env DEBUG=2 stackrun \
-  silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-na-eus2-blue \
+  ${AKS_IMAGE} \
     apply -auto-approve
 
 env DEBUG=0 stackrun \
-  silviosilva/azure-kubernetes-cluster:3.9.0-wasp-sbx-na-eus2-blue \
+  ${AKS_IMAGE} \
     output \
       -raw kubeconfig > ${HOME}/.kube/config
 
