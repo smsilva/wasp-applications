@@ -17,11 +17,9 @@ helm upgrade \
   --wait
 
 kubectl get ingress -n httpbin
-
 echo ""
 
 dig ${HTTPBIN_HOST?} | grep -E "^${HTTPBIN_HOST?}"
-
 echo ""
 
 echo "curl http://${HTTPBIN_HOST}/get"

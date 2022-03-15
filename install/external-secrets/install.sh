@@ -3,13 +3,14 @@ echo ""
 
 SCRIPT_PATH="$(dirname $0)"
 
-EXTERNAL_SECRETS_VERSION="0.4.4"
-
 helm repo add --force-update external-secrets https://charts.external-secrets.io
+echo ""
 
 helm repo update external-secrets
+echo ""
 
 helm search repo external-secrets
+echo ""
 
 helm install \
   external-secrets external-secrets/external-secrets \
@@ -19,8 +20,8 @@ helm install \
   --wait
 
 # Service Principal
-ARM_CLIENT_ID_BASE64=$(     echo ${ARM_CLIENT_ID}     | base64 )
-ARM_CLIENT_SECRET_BASE64=$( echo ${ARM_CLIENT_SECRET} | base64 )
+ARM_CLIENT_ID_BASE64=$(     echo ${ARM_CLIENT_ID?}     | base64 )
+ARM_CLIENT_SECRET_BASE64=$( echo ${ARM_CLIENT_SECRET?} | base64 )
 
 cat <<EOF | kubectl apply -f -
 ---

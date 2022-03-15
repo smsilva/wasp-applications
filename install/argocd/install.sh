@@ -10,12 +10,17 @@ ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
 mkdir -p "${HOME}/.helm/argocd/"
 
 helm repo add argo https://argoproj.github.io/argo-helm
+echo ""
 
 helm repo update argo
+echo ""
 
-ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID-5b59d3e0-04f4-4be4-aff4-b159a8ed4b46}"
-ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
-CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-staging"
+helm search repo argo
+echo ""
+
+ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID?}"
+ARGOCD_HOST="${ARGOCD_HOST?}"
+CERT_MANAGER_CLUSTER_ISSUER="${CERT_MANAGER_CLUSTER_ISSUER?}"
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
 fullnameOverride: "argocd"
@@ -27,7 +32,7 @@ server:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      cert-manager.io/cluster-issuer: letsencrypt-staging
+      cert-manager.io/cluster-issuer: ${CERT_MANAGER_CLUSTER_ISSUER}
     hosts:
       - ${ARGOCD_HOST}
     tls:
@@ -55,6 +60,15 @@ helm upgrade \
   --namespace ${NAMESPACE?} \
   --create-namespace \
   argocd argo/argo-cd \
+  --version "${ARGOCD_VERSION?}" \
   --values "${ARGOCD_HELM_FILE_SERVICE?}" \
   --values "${SCRIPT_PATH}/extra-objects.yaml" \
   --wait
+
+echo ""
+
+kubectl ${NAMESPACE?} get ingress
+echo ""
+
+dig @8.8.8.8 ${ARGOCD_HOST?}
+echo ""
