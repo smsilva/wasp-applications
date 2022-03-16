@@ -2,7 +2,7 @@
 SCRIPT_DIRECTORY="${PWD}/$(dirname $0)"
 
 export STACK_INSTANCE_NAME="${1-wasp-sbx-eus2-blue}"
-export AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION="3.10.0"
+export AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION="3.10.1"
 export AZURE_KUBERNETES_CLUSTER_IMAGE_NAME="silviosilva/azure-kubernetes-cluster"
 export DOCKER_BUILD_CONTEXT="${HOME}/trash/docker/build_context"
 

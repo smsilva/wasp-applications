@@ -3,4 +3,4 @@ SCRIPT_DIRECTORY="${PWD}/$(dirname $0)"
 
 docker build \
   --rm \
-  --tag silviosilva/azure-wasp-foundation:0.1.0-wasp-sbx-na "${SCRIPT_DIRECTORY}"
+  --tag silviosilva/azure-wasp-foundation:0.3.0-wasp-sbx-na "${SCRIPT_DIRECTORY}"
