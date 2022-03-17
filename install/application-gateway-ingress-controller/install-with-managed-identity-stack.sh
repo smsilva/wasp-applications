@@ -120,10 +120,15 @@ spec:
 EOF
 echo ""
 
-kubectl describe ingress
+APPLICATION_INGRESS_PUBLIC_IP=""
+while [ -z "${APPLICATION_INGRESS_PUBLIC_IP}" ]; do
+  APPLICATION_INGRESS_PUBLIC_IP="$(kubectl get Ingress aspnetapp --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")"
+  echo "APPLICATION_INGRESS_PUBLIC_IP: ${APPLICATION_INGRESS_PUBLIC_IP}"
+done
 echo ""
 
-APPLICATION_INGRESS_PUBLIC_IP="$(kubectl get ing aspnetapp -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+kubectl describe ingress
+echo ""
 
 curl -Is ${APPLICATION_INGRESS_PUBLIC_IP}
 echo ""
