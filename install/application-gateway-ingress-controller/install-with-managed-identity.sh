@@ -49,12 +49,15 @@ appGatewayResourceGroupId="$(az group show \
   --output tsv \
   --query id)"
 
+clear && \
+echo "" && \
 echo "identityName..............: ${identityName}" && \
 echo "identityClientId..........: ${identityClientId}" && \
 echo "identityObjectId..........: ${identityObjectId}" && \
 echo "identityResourceId........: ${identityResourceId}" && \
 echo "appGatewayResourceId......: ${appGatewayResourceId}" && \
-echo "appGatewayResourceGroupId.: ${appGatewayResourceGroupId}"
+echo "appGatewayResourceGroupId.: ${appGatewayResourceGroupId}" && \
+echo ""
 
 # Show Managed Identity Information
 az identity show --ids ${identityResourceId?}
@@ -86,6 +89,29 @@ helm install ingress-azure \
   --values "${HELM_CONFIG_FILE?}" \
   application-gateway-kubernetes-ingress/ingress-azure \
   --version 1.5.1
+
+clear && \
+echo "" && \
+echo "appgw.subscriptionId.......: ${ARM_SUBSCRIPTION_ID?}" && \
+echo "appgw.resourceGroup........: ${APP_GATEWAY_RESOURCE_GROUP_NAME?}" && \
+echo "appgw.name.................: ${APP_GATEWAY_NAME?}" && \
+echo "armAuth.identityResourceID.: ${identityResourceId?}" && \
+echo "armAuth.identityClientID...: ${identityClientId?}" && \
+echo ""
+
+helm install ingress-azure \
+  --set appgw.name=${APP_GATEWAY_NAME?} \
+  --set appgw.resourceGroup=${APP_GATEWAY_RESOURCE_GROUP_NAME?} \
+  --set appgw.subscriptionId=${ARM_SUBSCRIPTION_ID?} \
+  --set appgw.usePrivateIP=false \
+  --set appgw.shared=false \
+  --set armAuth.type=aadPodIdentity \
+  --set armAuth.identityResourceID=${identityResourceId?} \
+  --set armAuth.identityClientID=${identityClientId?} \
+  --set rbac.enabled=true \
+  --set verbosityLevel=3 \
+  --version 1.5.1 \
+  application-gateway-kubernetes-ingress/ingress-azure
 
 kubectl logs -f -l app=ingress-azure
 
