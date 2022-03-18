@@ -1,3 +1,24 @@
+## 0.7.0 (2022-03-18)
+
+### Refactor
+
+- **foundation/**: Base image for AKS Cluster
+- **install/application-gateway-ingress-controller/install-with-managed-identity-stack.sh**: Loop to wait for Ingress LoadBalancer Public IP
+- Common Parameters Set
+- AKS Image Parameter
+
+### Fix
+
+- **install/application-gateway-ingress-controller/**: Add armAuth.type=aadPodIdentity
+
+### Feat
+
+- **install/application-gateway-ingress-controller/*.sh**: Mode update to +x
+- **install/application-gateway-ingress-controller/install-with-managed-identity.sh**: Update Install Script
+- Install AGIC with Managed Identity
+- **foundation/aks-cluster/docker/build**: Update AKS Base Image to 3.10.1
+- Install AGIC with Service Principal
+
 ## 0.6.0 (2022-03-14)
 
 ### Feat
