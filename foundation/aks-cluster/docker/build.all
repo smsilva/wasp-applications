@@ -1,5 +1,3 @@
 #!/bin/bash
-clear
-
 ./build wasp-sbx-na-eus2-blue
 ./build wasp-sbx-na-eus2-green

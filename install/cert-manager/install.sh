@@ -21,4 +21,7 @@ helm upgrade \
   cert-manager jetstack/cert-manager \
   --wait
 
-kubectl --namespace cert-manager apply --filename "${SCRIPT_PATH}/cluster-issuers.yaml"
+kubectl \
+  apply \
+  --filename "${SCRIPT_PATH}/cluster-issuers.yaml" \
+  --namespace cert-manager

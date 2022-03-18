@@ -19,5 +19,3 @@ echo "INGRESS_NGINX_VERSION..............: ${INGRESS_NGINX_VERSION}"
 echo "EXTERNAL_DNS_VERSION...............: ${EXTERNAL_DNS_VERSION}"
 echo "CERT_MANAGER_VERSION...............: ${CERT_MANAGER_VERSION}"
 echo ""
-
-sleep 3
