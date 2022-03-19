@@ -1,0 +1,136 @@
+#!/bin/bash
+
+echo "3. Install AGIC: Application Gateway Ingress Controller"
+echo ""
+
+echo "3.1. Retrieve Stack Outputs"
+echo ""
+
+env \
+  DEBUG=0 \
+  stackrun ${STACK_AKS_IMAGE_NAME?} output -json > "${STACK_AKS_OUTPUT_FILE?}"
+
+SCRIPT_RESULT=$?
+
+if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+  echo "OK"
+else
+  exit "${SCRIPT_RESULT}"
+fi
+
+export MANAGED_IDENTITY_ID="$(                    jq -r .kubelet_identity_id.value                     "${STACK_AKS_OUTPUT_FILE?}")"
+export MANAGED_IDENTITY_CLIENT_ID="$(             jq -r .kubelet_identity_client_id.value              "${STACK_AKS_OUTPUT_FILE?}")"
+export APPLICATION_GATEWAY_ID="$(                 jq -r .application_gateway_id.value                  "${STACK_AKS_OUTPUT_FILE?}")"
+export APPLICATION_GATEWAY_NAME="$(               jq -r .application_gateway_name.value                "${STACK_AKS_OUTPUT_FILE?}")"
+export APPLICATION_GATEWAY_RESOURCE_GROUP_NAME="$(jq -r .application_gateway_resource_group_name.value "${STACK_AKS_OUTPUT_FILE?}")"
+
+echo ""
+echo "MANAGED_IDENTITY_ID.....................: ${MANAGED_IDENTITY_ID}"
+echo "MANAGED_IDENTITY_CLIENT_ID..............: ${MANAGED_IDENTITY_CLIENT_ID}"
+echo "APPLICATION_GATEWAY_ID..................: ${APPLICATION_GATEWAY_ID}"
+echo "APPLICATION_GATEWAY_NAME................: ${APPLICATION_GATEWAY_NAME}"
+echo "APPLICATION_GATEWAY_RESOURCE_GROUP_NAME.: ${APPLICATION_GATEWAY_RESOURCE_GROUP_NAME}"
+echo ""
+
+# Install Ingress Controller as a Helm Chart
+# https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/setup/install-existing.md#install-ingress-controller-as-a-helm-chart
+
+echo "3.2. Install using Helm"
+echo ""
+
+helm repo add    application-gateway-kubernetes-ingress https://appgwingress.blob.core.windows.net/ingress-azure-helm-package/ &> /dev/null
+helm repo update application-gateway-kubernetes-ingress &> /dev/null
+helm search repo application-gateway-kubernetes-ingress
+
+echo ""
+echo "appgw.subscriptionId.......: ${ARM_SUBSCRIPTION_ID?}"
+echo "appgw.resourceGroup........: ${APPLICATION_GATEWAY_RESOURCE_GROUP_NAME?}"
+echo "appgw.name.................: ${APPLICATION_GATEWAY_NAME?}"
+echo "armAuth.identityResourceID.: ${MANAGED_IDENTITY_ID?}"
+echo "armAuth.identityClientID...: ${MANAGED_IDENTITY_CLIENT_ID?}"
+echo ""
+
+helm upgrade \
+  --install ingress-azure \
+  --set "appgw.subscriptionId=${ARM_SUBSCRIPTION_ID?}" \
+  --set "appgw.resourceGroup=${APPLICATION_GATEWAY_RESOURCE_GROUP_NAME?}" \
+  --set "appgw.name=${APPLICATION_GATEWAY_NAME?}" \
+  --set "armAuth.type=aadPodIdentity" \
+  --set "armAuth.identityResourceID=${MANAGED_IDENTITY_ID?}" \
+  --set "armAuth.identityClientID=${MANAGED_IDENTITY_CLIENT_ID?}" \
+  --set "rbac.enabled=true" \
+  application-gateway-kubernetes-ingress/ingress-azure \
+  --wait
+
+echo ""
+echo "3.3. Show logs"
+echo ""
+
+kubectl logs -l app=ingress-azure
+echo ""
+
+echo "3.4. Deploy a Sample .Net App"
+echo ""
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aspnetapp
+  labels:
+    app: aspnetapp
+spec:
+  containers:
+    - image: "mcr.microsoft.com/dotnet/core/samples:aspnetapp"
+      name: aspnetapp-image
+      ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnetapp
+spec:
+  selector:
+    app: aspnetapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aspnetapp
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              service:
+                name: aspnetapp
+                port:
+                  number: 80
+            pathType: Exact
+EOF
+echo ""
+
+echo "3.4. Wait for Ingress IP"
+echo ""
+
+APPLICATION_INGRESS_PUBLIC_IP=""
+
+while [ -z "${APPLICATION_INGRESS_PUBLIC_IP}" ]; do
+  APPLICATION_INGRESS_PUBLIC_IP="$(kubectl get Ingress aspnetapp --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")"
+
+  if [ -z "${APPLICATION_INGRESS_PUBLIC_IP}" ]; then
+    echo "Waiting for Ingress IP..."
+    sleep 2
+  else
+    echo "Ingress Public IP: ${APPLICATION_INGRESS_PUBLIC_IP}"
+  fi
+done
+echo ""
