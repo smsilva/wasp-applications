@@ -17,9 +17,13 @@ env \
 
 chmod 0600 ~/.kube/config
 
+kubectl get namespaces
+
 # AAD Pod Identity - with RBAC
 # https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/setup/install-existing.md#set-up-aad-pod-identity
-kubectl apply -f https://raw.githubusercontent.com/Azure/aad-pod-identity/v1.6.0/deploy/infra/deployment-rbac.yaml
+kubectl \
+  apply \
+  -f https://raw.githubusercontent.com/Azure/aad-pod-identity/v1.6.0/deploy/infra/deployment-rbac.yaml
 
 echo ""
 
@@ -71,7 +75,7 @@ helm install ingress-azure \
 
 echo ""
 
-kubectl logs -l app=ingress-azure
+kubectl logs -f -l app=ingress-azure
 echo ""
 
 kubectl apply -f - <<EOF

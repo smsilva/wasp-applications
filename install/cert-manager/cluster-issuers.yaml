@@ -2,13 +2,43 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-staging
+  name: letsencrypt-app-gw-staging
 spec:
   acme:
     email: smsilva@gmail.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-staging-issuer-account-key
+      name: letsencrypt-app-gw-staging-issuer-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: azure-application-gateway
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-app-gw-prod
+spec:
+  acme:
+    email: smsilva@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-app-gw-prod-issuer-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: azure-application-gateway
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-nginx-staging
+spec:
+  acme:
+    email: smsilva@gmail.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-nginx-staging-issuer-account-key
     solvers:
       - http01:
           ingress:
@@ -17,13 +47,13 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod
+  name: letsencrypt-nginx-prod
 spec:
   acme:
     email: smsilva@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: letsencrypt-issuer-account-key
+      name: letsencrypt-nginx-prod-issuer-account-key
     solvers:
       - http01:
           ingress:

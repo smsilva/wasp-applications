@@ -1,0 +1,57 @@
+#!/bin/bash
+
+echo "1. Create an AKS Cluster with Azure Application Gateway"
+echo ""
+
+echo "1.1. Provisioning"
+echo ""
+
+if [ "${STACK_AKS_SKIP_PROVISIONING}" ]; then
+  echo "Skipped."
+  echo ""
+else
+  stackrun ${STACK_AKS_IMAGE_NAME?} \
+    apply -auto-approve -no-color
+
+  SCRIPT_RESULT=$?
+
+  if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+    echo ""
+  else
+    exit "${SCRIPT_RESULT}"
+  fi
+fi
+
+echo "1.2. Retrieve Credentials"
+echo ""
+
+env \
+  DEBUG=0 \
+  stackrun ${STACK_AKS_IMAGE_NAME?} \
+    output -raw kubeconfig > ~/.kube/config
+
+SCRIPT_RESULT=$?
+
+if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+  echo "OK"
+  echo ""
+else
+  exit "${SCRIPT_RESULT}"
+fi
+
+chmod 0600 ~/.kube/config
+
+echo "1.3. Connection Test"
+echo ""
+
+kubectl get namespaces
+
+SCRIPT_RESULT=$?
+
+if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+  echo ""
+  echo "OK"
+  echo ""
+else
+  exit "${SCRIPT_RESULT}"
+fi
