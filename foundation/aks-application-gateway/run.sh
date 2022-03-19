@@ -10,4 +10,6 @@ show_parameters
 
 create_aks_cluster_with_application_gateway
 
+install_aad_pod_identity
+
 finish

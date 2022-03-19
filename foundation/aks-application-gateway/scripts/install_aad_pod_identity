@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "2. Install AAD Pod Identity with RBAC"
+echo ""
+
+kubectl \
+  apply \
+  -f https://raw.githubusercontent.com/Azure/aad-pod-identity/v1.6.0/deploy/infra/deployment-rbac.yaml
+
+SCRIPT_RESULT=$?
+
+if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+  echo ""
+  echo "OK"
+  echo ""
+else
+  exit "${SCRIPT_RESULT}"
+fi

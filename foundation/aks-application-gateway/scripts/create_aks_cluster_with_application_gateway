@@ -25,33 +25,38 @@ fi
 echo "1.2. Retrieve Credentials"
 echo ""
 
-env \
-  DEBUG=0 \
-  stackrun ${STACK_AKS_IMAGE_NAME?} \
-    output -raw kubeconfig > ~/.kube/config
-
-SCRIPT_RESULT=$?
-
-if [ "${SCRIPT_RESULT}" -eq "0" ]; then
-  echo "OK"
+if [ "${STACK_AKS_SKIP_RETRIEVE_CREDENTIALS}" ]; then
+  echo "Skipped."
   echo ""
 else
-  exit "${SCRIPT_RESULT}"
-fi
+  env \
+    DEBUG=0 \
+    stackrun ${STACK_AKS_IMAGE_NAME?} \
+      output -raw kubeconfig > ~/.kube/config
 
-chmod 0600 ~/.kube/config
+  SCRIPT_RESULT=$?
 
-echo "1.3. Connection Test"
-echo ""
+  if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+    echo "OK"
+    echo ""
+  else
+    exit "${SCRIPT_RESULT}"
+  fi
 
-kubectl get namespaces
+  chmod 0600 ~/.kube/config
 
-SCRIPT_RESULT=$?
-
-if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+  echo "1.3. Connection Test"
   echo ""
-  echo "OK"
-  echo ""
-else
-  exit "${SCRIPT_RESULT}"
+
+  kubectl get namespaces
+
+  SCRIPT_RESULT=$?
+
+  if [ "${SCRIPT_RESULT}" -eq "0" ]; then
+    echo ""
+    echo "OK"
+    echo ""
+  else
+    exit "${SCRIPT_RESULT}"
+  fi
 fi
