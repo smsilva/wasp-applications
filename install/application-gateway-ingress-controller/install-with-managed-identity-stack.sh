@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export WORK_DIRECTORY="${HOME}/trash"
-export AKS_CLUSTER_IMAGE="silviosilva/azure-kubernetes-cluster:3.14.0"
+export AKS_CLUSTER_IMAGE="silviosilva/azure-kubernetes-with-appgw:4.3.0"
 export AKS_INFORMATION_FILE="${WORK_DIRECTORY?}/cluster-outputs.json"
 
 env \

@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    appgw.ingress.kubernetes.io/backend-protocol: "https"
+    # appgw.ingress.kubernetes.io/ssl-redirect: "true"
+    # appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+    # appgw.ingress.kubernetes.io/request-timeout: "20"
+    # appgw.ingress.kubernetes.io/health-probe-hostname: "argocd-server"
+    # appgw.ingress.kubernetes.io/appgw-trusted-root-certificate: "argocd-blue-eastus2-sandbox-wasp-silvios-me-root.cer"
+    # appgw.ingress.kubernetes.io/backend-hostname: "argocd-server"
+    meta.helm.sh/release-name: argocd
+    meta.helm.sh/release-namespace: argocd-infra
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argocd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    helm.sh/chart: argo-cd-3.35.4
+  name: argocd-server
+  namespace: argocd-infra
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+    - host: argocd-blue.eastus2.sandbox.wasp.silvios.me
+      http:
+        paths:
+          - backend:
+              service:
+                name: argocd-server
+                port:
+                  name: https
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - argocd-blue.eastus2.sandbox.wasp.silvios.me
+      secretName: argocd-tls-letsencrypt-certificate

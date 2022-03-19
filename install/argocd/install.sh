@@ -22,6 +22,13 @@ ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID?}"
 ARGOCD_HOST="${ARGOCD_HOST?}"
 CERT_MANAGER_CLUSTER_ISSUER="${CERT_MANAGER_CLUSTER_ISSUER?}"
 
+clear && \
+echo "" && \
+echo "ARGOCD_APP_REGISTRATION_ID..: ${ARGOCD_APP_REGISTRATION_ID}" && \
+echo "ARGOCD_HOST.................: ${ARGOCD_HOST}" && \
+echo "CERT_MANAGER_CLUSTER_ISSUER.: ${CERT_MANAGER_CLUSTER_ISSUER}" && \
+echo ""
+
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
 fullnameOverride: "argocd"
 server:
@@ -36,11 +43,13 @@ server:
     hosts:
       - ${ARGOCD_HOST}
     tls:
-      - secretName: argocd-tls-certificate
+      - secretName: argocd-tls-letsencrypt-certificate
         hosts:
           - ${ARGOCD_HOST}
   config:
     url: https://${ARGOCD_HOST}
+    users.anonymous.enabled: "false"
+    admin.enabled: "false"
     oidc.config: |
       name: AzureAD
       issuer: https://login.microsoftonline.com/${ARM_TENANT_ID}/v2.0
