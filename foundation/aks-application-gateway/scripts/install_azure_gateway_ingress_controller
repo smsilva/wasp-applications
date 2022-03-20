@@ -1,22 +1,17 @@
 #!/bin/bash
 
+echo ""
 echo "3. Install AGIC: Application Gateway Ingress Controller"
 echo ""
-
 echo "3.1. Retrieve Stack Outputs"
 echo ""
 
 env \
   DEBUG=0 \
-  stackrun ${STACK_AKS_IMAGE_NAME?} output -json > "${STACK_AKS_OUTPUT_FILE?}"
+  stackrun ${STACK_AKS_IMAGE_NAME?} \
+    output -json > "${STACK_AKS_OUTPUT_FILE?}"
 
-SCRIPT_RESULT=$?
-
-if [ "${SCRIPT_RESULT}" -eq "0" ]; then
-  echo "OK"
-else
-  exit "${SCRIPT_RESULT}"
-fi
+SCRIPT_RESULT=$?; [ "${SCRIPT_RESULT}" -eq "0" ] && echo "OK" || exit "${SCRIPT_RESULT}"
 
 export MANAGED_IDENTITY_ID="$(                    jq -r .kubelet_identity_id.value                     "${STACK_AKS_OUTPUT_FILE?}")"
 export MANAGED_IDENTITY_CLIENT_ID="$(             jq -r .kubelet_identity_client_id.value              "${STACK_AKS_OUTPUT_FILE?}")"
@@ -25,16 +20,6 @@ export APPLICATION_GATEWAY_NAME="$(               jq -r .application_gateway_nam
 export APPLICATION_GATEWAY_RESOURCE_GROUP_NAME="$(jq -r .application_gateway_resource_group_name.value "${STACK_AKS_OUTPUT_FILE?}")"
 
 echo ""
-echo "MANAGED_IDENTITY_ID.....................: ${MANAGED_IDENTITY_ID}"
-echo "MANAGED_IDENTITY_CLIENT_ID..............: ${MANAGED_IDENTITY_CLIENT_ID}"
-echo "APPLICATION_GATEWAY_ID..................: ${APPLICATION_GATEWAY_ID}"
-echo "APPLICATION_GATEWAY_NAME................: ${APPLICATION_GATEWAY_NAME}"
-echo "APPLICATION_GATEWAY_RESOURCE_GROUP_NAME.: ${APPLICATION_GATEWAY_RESOURCE_GROUP_NAME}"
-echo ""
-
-# Install Ingress Controller as a Helm Chart
-# https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/setup/install-existing.md#install-ingress-controller-as-a-helm-chart
-
 echo "3.2. Install using Helm"
 echo ""
 
@@ -43,11 +28,15 @@ helm repo update application-gateway-kubernetes-ingress &> /dev/null
 helm search repo application-gateway-kubernetes-ingress
 
 echo ""
-echo "appgw.subscriptionId.......: ${ARM_SUBSCRIPTION_ID?}"
-echo "appgw.resourceGroup........: ${APPLICATION_GATEWAY_RESOURCE_GROUP_NAME?}"
-echo "appgw.name.................: ${APPLICATION_GATEWAY_NAME?}"
-echo "armAuth.identityResourceID.: ${MANAGED_IDENTITY_ID?}"
-echo "armAuth.identityClientID...: ${MANAGED_IDENTITY_CLIENT_ID?}"
+echo "appgw:"
+echo "  subscriptionId:     ${ARM_SUBSCRIPTION_ID?}"
+echo "  resourceGroup:      ${APPLICATION_GATEWAY_RESOURCE_GROUP_NAME?}"
+echo "  name:               ${APPLICATION_GATEWAY_NAME?}"
+echo ""
+echo "armAuth:"
+echo "  type:               aadPodIdentity"
+echo "  identityResourceID: ${MANAGED_IDENTITY_ID?}"
+echo "  identityClientID:   ${MANAGED_IDENTITY_CLIENT_ID?}"
 echo ""
 
 helm upgrade \
@@ -67,8 +56,8 @@ echo "3.3. Show logs"
 echo ""
 
 kubectl logs -l app=ingress-azure
-echo ""
 
+echo ""
 echo "3.4. Deploy a Sample .Net App"
 echo ""
 
@@ -116,15 +105,21 @@ spec:
                   number: 80
             pathType: Exact
 EOF
-echo ""
 
-echo "3.4. Wait for Ingress IP"
+kubectl wait pod \
+  --for condition=Ready \
+  --selector app=aspnetapp \
+  --timeout=60s
+
+echo ""
+echo "3.5. Wait for Ingress IP"
 echo ""
 
 APPLICATION_INGRESS_PUBLIC_IP=""
 
 while [ -z "${APPLICATION_INGRESS_PUBLIC_IP}" ]; do
-  APPLICATION_INGRESS_PUBLIC_IP="$(kubectl get Ingress aspnetapp --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")"
+  APPLICATION_INGRESS_PUBLIC_IP="$(kubectl get Ingress aspnetapp \
+    --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")"
 
   if [ -z "${APPLICATION_INGRESS_PUBLIC_IP}" ]; then
     echo "Waiting for Ingress IP..."
@@ -133,4 +128,25 @@ while [ -z "${APPLICATION_INGRESS_PUBLIC_IP}" ]; do
     echo "Ingress Public IP: ${APPLICATION_INGRESS_PUBLIC_IP}"
   fi
 done
+
 echo ""
+echo "3.5. Test with curl"
+echo ""
+
+APPLICATION_GATEWAY_URL="http://${APPLICATION_INGRESS_PUBLIC_IP}"
+
+HTTP_CODE="000"
+
+while [ "${HTTP_CODE}" != "200" ]; do
+  HTTP_CODE=$(curl \
+    --silent \
+    --output /dev/null \
+    --write-out "%{http_code}" \
+      ${APPLICATION_GATEWAY_URL})
+  
+  sleep 3
+done
+
+curl \
+  --head \
+  --silent ${APPLICATION_GATEWAY_URL}
