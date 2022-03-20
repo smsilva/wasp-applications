@@ -3,25 +3,19 @@ echo ""
 
 SCRIPT_PATH="$(dirname $0)"
 
-helm repo add jetstack https://charts.jetstack.io
-echo ""
-
-helm repo update jetstack
-echo ""
-
+helm repo add jetstack https://charts.jetstack.io &> /dev/null
+helm repo update jetstack &> /dev/null
 helm search repo jetstack
-echo ""
 
 helm upgrade \
   --install \
   --namespace cert-manager \
   --create-namespace \
   --set installCRDs=true \
-  --version "${CERT_MANAGER_VERSION}" \
   cert-manager jetstack/cert-manager \
   --wait
 
-kubectl \
-  apply \
-  --filename "${SCRIPT_PATH}/cluster-issuers.yaml" \
-  --namespace cert-manager
+helm upgrade \
+  --install \
+  --namespace cert-manager \
+  cert-maanager-issuers "${SCRIPT_PATH?}/cert-maanager-issuers/"
