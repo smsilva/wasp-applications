@@ -15,7 +15,7 @@ helm upgrade \
   cert-manager jetstack/cert-manager \
   --wait
 
-helm upgrade \
-  --install \
-  --namespace cert-manager \
-  cert-maanager-issuers "${SCRIPT_PATH?}/cert-maanager-issuers/"
+# helm upgrade \
+#   --install \
+#   --namespace cert-manager \
+#   cert-manager-issuers "./charts/cert-manager-issuers/"
