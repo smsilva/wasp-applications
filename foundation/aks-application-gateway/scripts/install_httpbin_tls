@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo ""
-echo "4. Install httpbin"
+echo "4. Install httpbin (TLS Ingress Enabled)"
 echo ""
 echo "4.1. Install using Helm Chart"
 echo ""
@@ -10,24 +10,30 @@ HTTPBIN_HOST="wasp-sbx-na-eus2-blue.eastus2.cloudapp.azure.com"
 HTTPBIN_NAMESPACE="httpbin"
 INGRESS_NAME="httpbin"
 INGRESS_CLASS_NAME="azure-application-gateway"
+INGRESS_TLS_SECRET_NAME="httpbin-tls-ingress"
+CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-staging-application-gateway"
 
 echo "httpbin:"
 echo "  ingress:"
 echo "    host:          ${HTTPBIN_HOST?}"
 echo "    class:         ${INGRESS_CLASS_NAME?}"
+echo "    tlsSecret:     ${INGRESS_TLS_SECRET_NAME?}"
+echo "    clusterIssuer: ${CERT_MANAGER_CLUSTER_ISSUER?}"
 echo ""
 
 helm upgrade \
   --install \
-  --namespace ${HTTPBIN_NAMESPACE?} \
+  --namespace httpbin \
   --create-namespace \
   httpbin ./charts/httpbin/ \
   --set "ingress.enabled=true" \
   --set "ingress.className=${INGRESS_CLASS_NAME?}" \
+  --set "ingress.annotations.cert-manager\.io/cluster-issuer=${CERT_MANAGER_CLUSTER_ISSUER?}" \
   --set "ingress.hosts[0].host=${HTTPBIN_HOST?}" \
   --set "ingress.hosts[0].paths[0].path=/" \
   --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
-  --wait
+  --set "ingress.tls[0].secretName=${INGRESS_TLS_SECRET_NAME?}" \
+  --set "ingress.tls[0].hosts[0]=${HTTPBIN_HOST?}"
 
 echo ""
 echo "4.2. Wait for Ingress IP"
@@ -37,26 +43,4 @@ APPLICATION_INGRESS_PUBLIC_IP="$(wait_for_ingress_ip \
   "${HTTPBIN_NAMESPACE?}" \
   "${INGRESS_NAME?}")"
 
-echo "${APPLICATION_INGRESS_PUBLIC_IP}"
-
-echo ""
-echo "4.3. Test with curl"
-echo ""
-
-APPLICATION_GATEWAY_URL="http://${HTTPBIN_HOST}"
-
-HTTP_CODE="000"
-
-while [ "${HTTP_CODE}" != "200" ]; do
-  HTTP_CODE=$(curl \
-    --silent \
-    --output /dev/null \
-    --write-out "%{http_code}" \
-      ${APPLICATION_GATEWAY_URL})
-  
-  sleep 3
-done
-
-curl \
-  --head \
-  --silent ${APPLICATION_GATEWAY_URL}/get
+echo "
