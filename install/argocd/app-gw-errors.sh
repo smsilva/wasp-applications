@@ -70,8 +70,6 @@ az network application-gateway root-cert \
 # End-to-end TLS with the v2 SKU
 # https://docs.microsoft.com/en-us/azure/application-gateway/ssl-overview#end-to-end-tls-with-the-v2-sku
 
-###########################
-
 openssl pkcs12 \
   -export \
   -in mycertificate.pem \
@@ -104,20 +102,50 @@ kubectl \
 kubectl run -it --image=alpine/openssl openssl
 
 s_client -connect 10.246.0.103:8080 -servername argocd-server -showcerts
+
 s_client -connect argocd-server:80 -servername argocd-server -showcerts
 
 s_client -connect 10.246.0.28:8080 -servername argocd-blue.eastus2.sandbox.wasp.silvios.me -showcerts
 
-kubectl -n argocd-infra run -it --image=alpine/openssl openssl
+###############################
 
-#########################
+kubectl \
+  -n argocd-infra run \
+  -it \
+  --image=alpine/openssl openssl
 
-echo | openssl s_client \
-  -connect argocd-blue.eastus2.sandbox.wasp.silvios.me:443 \
-  -servername argocd-blue.eastus2.sandbox.wasp.silvios.me \
-  -showcerts
+cat \
+  sectigo-certificate.cer \
+  sectigo-rsa.cer \
+  sectigo-root.cer > sectigo-certificate-combined.cer
 
-echo | openssl s_client \
-  -connect argocd-blue.eastus2.sandbox.wasp.silvios.me:443 \
-  -servername argocd-blue.eastus2.sandbox.wasp.silvios.me \
-  -showcerts 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -noout -text
+kubectl \
+  -n argocd-infra \
+  delete secret argocd-secret
+
+kubectl \
+  -n argocd-infra \
+  create secret tls argocd-secret \
+  --cert=sectigo-certificate-combined.cer \
+  --key=sectigo-key.cer
+
+kubectl \
+  -n argocd-infra \
+  annotate es argocd-secret force-sync=$(date +%s) \
+  --overwrite
+
+kubectl \
+  -n argocd-infra get deploy argocd-server
+
+kubectl \
+  -n argocd-infra rollout restart deploy argocd-server
+
+openssl pkcs12 \
+  -in argocd.bees-platform.dev.pfx \
+  -nocerts \
+  -out private.key
+
+kubectl \
+  -n argocd-infra run \
+  -it \
+  --image=alpine/openssl openssl

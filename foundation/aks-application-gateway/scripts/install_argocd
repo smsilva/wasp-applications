@@ -1,0 +1,80 @@
+#!/bin/bash
+helm repo add argo https://argoproj.github.io/argo-helm &> /dev/null
+helm repo update argo &> /dev/null
+helm search repo argo
+
+ARGOCD_VERSION="4.2.1"
+ARGOCD_HOST="argocd.bees-platform.dev"
+ARGOCD_NAMESPACE="argocd-infra"
+ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
+ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
+
+mkdir -p "${HOME}/.helm/argocd/"
+
+echo ""
+echo "ARGOCD_APP_REGISTRATION_ID..: ${ARGOCD_APP_REGISTRATION_ID}"
+echo "ARGOCD_HOST.................: ${ARGOCD_HOST}"
+echo "ARGOCD_VERSION..............: ${ARGOCD_VERSION}"
+echo "ARGOCD_NAMESPACE............: ${ARGOCD_NAMESPACE}"
+echo "ARGOCD_HOST.................: ${ARGOCD_HOST}"
+echo "ARGOCD_HELM_FILE_SERVICE....: ${ARGOCD_HELM_FILE_SERVICE}"
+echo ""
+
+cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
+fullnameOverride: "argocd"
+server:
+  extraArgs:
+    - --insecure
+  ingress:
+    enabled: false
+    ingressClassName: "azure-application-gateway"
+    hosts:
+      - ${ARGOCD_HOST}
+    tls:
+      - secretName: argocd-secret
+        hosts:
+          - ${ARGOCD_HOST}
+    annotations:
+      appgw.ingress.kubernetes.io/backend-protocol: "http"
+  config:
+    url: https://${ARGOCD_HOST}
+    users.anonymous.enabled: "false"
+    admin.enabled: "false"
+    oidc.config: |
+      name: AzureAD
+      issuer: https://login.microsoftonline.com/${ARM_TENANT_ID}/v2.0
+      clientID: ${ARGOCD_APP_REGISTRATION_ID}
+      clientSecret: \$oidc.azuread.clientSecret
+      requestedIDTokenClaims:
+        groups:
+          essential: true
+      requestedScopes:
+        - openid
+        - profile
+        - email
+extraObjects:
+  - apiVersion: external-secrets.io/v1alpha1
+    kind: ExternalSecret
+    metadata:
+      name: argocd-secret
+    spec:
+      refreshInterval: 1h
+      secretStoreRef:
+        kind: ClusterSecretStore
+        name: azure-subscription-key-vault
+      target:
+        name: argocd-secret
+        creationPolicy: Merge
+      data:
+        - secretKey: "oidc.azuread.clientSecret"
+          remoteRef:
+            key: secret/argocd-oidc-azuread-client-secret
+EOF
+
+helm upgrade \
+  --install \
+  --namespace ${ARGOCD_NAMESPACE?} \
+  --create-namespace \
+  argocd argo/argo-cd \
+  --version "${ARGOCD_VERSION?}" \
+  --values "${ARGOCD_HELM_FILE_SERVICE?}"

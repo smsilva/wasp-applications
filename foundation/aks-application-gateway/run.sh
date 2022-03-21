@@ -19,4 +19,8 @@ install_httpbin_no_tls
 
 # install_httpbin_tls
 
+install_external_secrets
+
+install_argocd
+
 finish
