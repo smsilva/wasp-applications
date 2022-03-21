@@ -9,18 +9,20 @@ export PATH=${PATH}:${SCRIPTS_DIRECTORY}
 
 show_parameters
 
-create_aks_cluster_with_application_gateway
+# create_aks_cluster_with_application_gateway
 
-install_aad_pod_identity
+# install_aad_pod_identity
 
-install_azure_gateway_ingress_controller
+# install_azure_gateway_ingress_controller
 
 install_httpbin_no_tls
 
 # install_httpbin_tls
 
-install_external_secrets
+# install_external_secrets
 
-install_argocd
+# install_external_dns
+
+# install_argocd
 
 finish
