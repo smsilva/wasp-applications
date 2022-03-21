@@ -15,14 +15,14 @@ show_parameters
 
 # install_azure_gateway_ingress_controller
 
-install_httpbin_no_tls
-
-# install_httpbin_tls
-
 # install_external_secrets
 
 # install_external_dns
 
-# install_argocd
+# install_cert_manager
+
+# install_httpbin_tls
+
+install_argocd
 
 finish

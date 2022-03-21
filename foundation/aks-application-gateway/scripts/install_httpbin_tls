@@ -6,7 +6,7 @@ echo ""
 echo "4.1. Install using Helm Chart"
 echo ""
 
-HTTPBIN_HOST="wasp-sbx-na-eus2-blue.eastus2.cloudapp.azure.com"
+HTTPBIN_HOST="echo.eastus2.sandbox.wasp.silvios.me"
 HTTPBIN_NAMESPACE="httpbin"
 INGRESS_NAME="httpbin"
 INGRESS_CLASS_NAME="azure-application-gateway"
@@ -36,6 +36,10 @@ helm upgrade \
   --set "ingress.tls[0].hosts[0]=${HTTPBIN_HOST?}"
 
 echo ""
+
+kubectl -n ${HTTPBIN_NAMESPACE?} get ingress ${INGRESS_NAME?}
+
+echo ""
 echo "4.2. Wait for Ingress IP"
 echo ""
 
@@ -43,4 +47,5 @@ APPLICATION_INGRESS_PUBLIC_IP="$(wait_for_ingress_ip \
   "${HTTPBIN_NAMESPACE?}" \
   "${INGRESS_NAME?}")"
 
-echo "
+echo "${APPLICATION_INGRESS_PUBLIC_IP}"
+echo ""

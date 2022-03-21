@@ -4,7 +4,7 @@ helm repo update argo &> /dev/null
 helm search repo argo
 
 ARGOCD_VERSION="4.2.1"
-ARGOCD_HOST="argocd.bees-platform.dev"
+ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
 ARGOCD_NAMESPACE="argocd-infra"
 ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
 ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
@@ -26,7 +26,8 @@ server:
   extraArgs:
     - --insecure
   ingress:
-    enabled: false
+    enabled: true
+    https: true
     ingressClassName: "azure-application-gateway"
     hosts:
       - ${ARGOCD_HOST}
@@ -35,7 +36,8 @@ server:
         hosts:
           - ${ARGOCD_HOST}
     annotations:
-      appgw.ingress.kubernetes.io/backend-protocol: "http"
+      appgw.ingress.kubernetes.io/backend-protocol: "https"
+      cert-manager.io/cluster-issuer: letsencrypt-staging-application-gateway
   config:
     url: https://${ARGOCD_HOST}
     users.anonymous.enabled: "false"
