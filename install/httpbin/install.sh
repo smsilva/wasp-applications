@@ -38,8 +38,7 @@ helm upgrade \
   httpbin ./charts/httpbin/ \
   --set "ingress.enabled=true" \
   --set "ingress.className=${INGRESS_CLASS_NAME?}" \
-  --set "ingress.annotations.certmanager\.k8s\.io/cluster-issuer=${CERT_MANAGER_CLUSTER_ISSUER?}" \
-  --set "ingress.annotations.kubernetes\.io/tls-acme=\"true\"" \
+  --set "ingress.annotations.cert-manager\.io/cluster-issuer=${CERT_MANAGER_CLUSTER_ISSUER?}" \
   --set "ingress.hosts[0].host=${HTTPBIN_HOST?}" \
   --set "ingress.hosts[0].paths[0].path=/" \
   --set "ingress.hosts[0].paths[0].pathType=ImplementationSpecific" \
@@ -58,28 +57,29 @@ kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    meta.helm.sh/release-name: httpbin
-    meta.helm.sh/release-namespace: httpbin
   labels:
     app.kubernetes.io/instance: httpbin
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: httpbin
     app.kubernetes.io/version: 1.16.0
-    helm.sh/chart: httpbin-0.1.0
+  annotations:
+    cert-manager.io/cluster-issuer: ${CERT_MANAGER_CLUSTER_ISSUER?}
   name: httpbin
   namespace: httpbin
 spec:
   ingressClassName: azure-application-gateway
   rules:
-  - host: wasp-sbx-na-eus2-blue.eastus2.cloudapp.azure.com
-    http:
-      paths:
-      - backend:
-          service:
-            name: httpbin
-            port:
-              number: 80
-        path: /
-        pathType: ImplementationSpecific
+    - host: ${HTTPBIN_HOST?}
+      http:
+        paths:
+        - path: /
+          backend:
+            service:
+              name: httpbin
+              port:
+                number: 80
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - ${HTTPBIN_HOST?}
+      secretName: httpbin-tls-ingress-certificate
 EOF
