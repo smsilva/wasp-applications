@@ -149,3 +149,9 @@ kubectl \
   -n argocd-infra run \
   -it \
   --image=alpine/openssl openssl
+
+kubectl \
+  create secret tls argocd-tls-prod \
+  --cert=argocd-blue.eastus2.sandbox.wasp.silvios.me.pem \
+  --key=argocd-blue.eastus2.sandbox.wasp.silvios.me.key \
+  --namespace argocd-infra

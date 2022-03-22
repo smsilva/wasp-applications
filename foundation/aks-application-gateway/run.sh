@@ -21,8 +21,6 @@ install_external_dns
 
 install_cert_manager
 
-install_httpbin_tls
-
 install_argocd
 
 finish

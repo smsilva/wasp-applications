@@ -12,6 +12,7 @@ helm search repo argo
 ARGOCD_VERSION="4.2.1"
 ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
 ARGOCD_NAMESPACE="argocd-infra"
+ARGOCD_TLS_SECRET="argocd-tls-staging"
 ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
 ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
 CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-staging-application-gateway"
@@ -32,34 +33,40 @@ echo ""
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
 fullnameOverride: "argocd"
+configs:
+  repositories:
+    wasp:
+      url: "git@github.com:smsilva/wasp-gitops.git"
+      name: "wasp-gitops"
+      type: "git"
 server:
   extraArgs:
     - --insecure
   ingress:
     enabled: true
     https: false
-    ingressClassName: "${INGRESS_CLASS_NAME}"
+    ingressClassName: "${INGRESS_CLASS_NAME?}"
     hosts:
-      - ${ARGOCD_HOST}
+      - ${ARGOCD_HOST?}
     pathType: ImplementationSpecific
     paths:
       - /
       - /argocd
     tls:
-      - secretName: argocd-tls-secret
+      - secretName: ${ARGOCD_TLS_SECRET?}
         hosts:
-          - ${ARGOCD_HOST}
+          - ${ARGOCD_HOST?}
     annotations:
       appgw.ingress.kubernetes.io/backend-protocol: "http"
-      cert-manager.io/cluster-issuer: ${CERT_MANAGER_CLUSTER_ISSUER}
+      cert-manager.io/cluster-issuer: ${CERT_MANAGER_CLUSTER_ISSUER?}
   config:
-    url: https://${ARGOCD_HOST}
+    url: https://${ARGOCD_HOST?}
     users.anonymous.enabled: "false"
     admin.enabled: "false"
     oidc.config: |
       name: AzureAD
-      issuer: https://login.microsoftonline.com/${ARM_TENANT_ID}/v2.0
-      clientID: ${ARGOCD_APP_REGISTRATION_ID}
+      issuer: https://login.microsoftonline.com/${ARM_TENANT_ID?}/v2.0
+      clientID: ${ARGOCD_APP_REGISTRATION_ID?}
       clientSecret: \$oidc.azuread.clientSecret
       requestedIDTokenClaims:
         groups:
@@ -68,23 +75,6 @@ server:
         - openid
         - profile
         - email
-extraObjects:
-  - apiVersion: external-secrets.io/v1alpha1
-    kind: ExternalSecret
-    metadata:
-      name: argocd-secret
-    spec:
-      refreshInterval: 1h
-      secretStoreRef:
-        kind: ClusterSecretStore
-        name: azure-subscription-key-vault
-      target:
-        name: argocd-secret
-        creationPolicy: Merge
-      data:
-        - secretKey: "oidc.azuread.clientSecret"
-          remoteRef:
-            key: secret/argocd-oidc-azuread-client-secret
 EOF
 
 helm upgrade \
@@ -93,7 +83,8 @@ helm upgrade \
   --create-namespace \
   argocd argo/argo-cd \
   --version "${ARGOCD_VERSION?}" \
-  --values "${ARGOCD_HELM_FILE_SERVICE?}"
+  --values "${ARGOCD_HELM_FILE_SERVICE?}" \
+  --values "${SCRIPTS_DIRECTORY}/../argocd-extra-objects.yaml"
 
 echo ""
 echo "4.2. Test"
@@ -102,8 +93,15 @@ echo ""
 cat << EOF
 echo | openssl \\
   s_client \\
-    -connect ${ARGOCD_HOST}:443 \\
+    -connect ${ARGOCD_HOST?}:443 \\
     -showcerts
+
+kubectl \\
+  create secret tls argocd-tls-prod \\
+  --cert=argocd-blue.eastus2.sandbox.wasp.silvios.me.pem \\
+  --key=argocd-blue.eastus2.sandbox.wasp.silvios.me.key \\
+  --namespace argocd-infra
+
 EOF
 
 echo ""
