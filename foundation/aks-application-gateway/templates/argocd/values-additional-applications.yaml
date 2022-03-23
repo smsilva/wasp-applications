@@ -1,7 +1,6 @@
 server:
   additionalApplications:
     - name: httpbin
-      namespace: ${ARGOCD_NAMESPACE}
       additionalLabels: {}
       additionalAnnotations: {}
       finalizers:

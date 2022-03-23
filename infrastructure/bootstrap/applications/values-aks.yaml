@@ -1,5 +1,8 @@
 applications:
-  - name: argocd-config
-    namespace: argocd-infra
+  - name: istio-base
+    namespace: istio
+    wave: 1
+
+  - name: istio-istiod
+    namespace: istio
     wave: 2
-    finalizers: []

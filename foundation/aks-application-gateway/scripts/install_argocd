@@ -58,4 +58,5 @@ helm upgrade \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-rbac-config.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-configs-known-hosts.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-extra-objects.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-additional-projects.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-additional-applications.yaml"

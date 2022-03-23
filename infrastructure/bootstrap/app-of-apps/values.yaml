@@ -1,9 +1,9 @@
 global:
   environment:
-    id: wasp-sandbox-eastus2
-    domain: wasp-sandbox.eastus2.silvios.me
+    id: blue
+    domain: eastus2.sandbox.wasp.silvios.me
     namespace: argocd-infra
 
 helm:
   files:
-    - values-kind.yaml
+    - values-aks.yaml
