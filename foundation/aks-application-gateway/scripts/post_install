@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Follow ingress-azure logs
+kubectl \
+  logs \
+  --follow \
+  --selector app=ingress-azure \
+  --namespae default
+
+# Retrieve ArgoCD Host from argocd-server Ingress
+ARGOCD_INGRESS_HOST=$(kubectl \
+  --namespace argocd-infra get ingress argocd-server \
+  --output jsonpath='{.spec.rules[0].host}') && \
+echo "${ARGOCD_INGRESS_HOST}" && \
+echo | openssl \
+  s_client \
+    -connect ${ARGOCD_INGRESS_HOST?}:443
+
+# Show Certificate Information
+openssl x509 \
+  -in "certificate.pem" \
+  -text \
+  -noout
+
+# Create a Secret with Certificates
+kubectl \
+  create secret tls argocd-tls-prod \
+  --cert="certificate.pem" \
+  --key="certificate.key" \
+  --namespace argocd-infra
+
+export SOLVER_INGRESS_NAME=""
+
+kubectl \
+  --namespace argocd-infra \
+  annotate ingress ${SOLVER_INGRESS_NAME?} description-
+
+kubectl patch ingress \${SOLVER_INGRESS_NAME?} \
+ --patch'{"spec":{"ingressClassName": azure-application-gateway}}'
