@@ -6,3 +6,5 @@ applications:
   - name: istio-istiod
     namespace: istio
     wave: 2
+
+  - name: namespaces

@@ -33,8 +33,8 @@ echo "  ssoAppRegistrationId: ${ARGOCD_APP_REGISTRATION_ID}"
 echo "  clusterIssuer:        ${CERT_MANAGER_CLUSTER_ISSUER}"
 echo "  ingressClassName:     ${INGRESS_CLASS_NAME}"
 echo "  tlsSecret:            ${ARGOCD_TLS_SECRET}"
-echo "  templates:            ${ARGOCD_TEMPLATES_DIRECTORY}"
-echo "  workDir:              ${ARGOCD_TEMPORARY_DIRECTORY}"
+echo "  templatesDirectory:   ${ARGOCD_TEMPLATES_DIRECTORY}"
+echo "  workDirectory:        ${ARGOCD_TEMPORARY_DIRECTORY}"
 echo ""
 
 # This will be used when we need to put a '$' sign into the final file.
@@ -60,3 +60,9 @@ helm upgrade \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-extra-objects.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-additional-projects.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-additional-applications.yaml"
+
+helm upgrade \
+  --install \
+  --namespace ${ARGOCD_NAMESPACE?} \
+  --create-namespace \
+  app-of-apps-infra ${SCRIPTS_DIRECTORY}/../../../infrastructure/bootstrap/app-of-apps
