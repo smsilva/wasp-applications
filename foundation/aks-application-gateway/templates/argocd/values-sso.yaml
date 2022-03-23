@@ -1,0 +1,17 @@
+server:
+  config:
+    url: https://${ARGOCD_HOST}
+    users.anonymous.enabled: "false"
+    admin.enabled: "false"
+    oidc.config: |
+      name: AzureAD
+      issuer: https://login.microsoftonline.com/${ARM_TENANT_ID}/v2.0
+      clientID: ${ARGOCD_APP_REGISTRATION_ID}
+      clientSecret: ${DOLLAR}oidc.azuread.clientSecret
+      requestedIDTokenClaims:
+        groups:
+          essential: true
+      requestedScopes:
+        - openid
+        - profile
+        - email

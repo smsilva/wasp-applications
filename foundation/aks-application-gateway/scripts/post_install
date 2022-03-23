@@ -5,7 +5,7 @@ kubectl \
   logs \
   --follow \
   --selector app=ingress-azure \
-  --namespae default
+  --namespace default
 
 # Retrieve ArgoCD Host from argocd-server Ingress
 ARGOCD_INGRESS_HOST=$(kubectl \

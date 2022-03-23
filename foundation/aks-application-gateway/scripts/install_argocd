@@ -9,102 +9,45 @@ helm repo add argo https://argoproj.github.io/argo-helm &> /dev/null
 helm repo update argo &> /dev/null
 helm search repo argo
 
-ARGOCD_LETS_ENCRYPT_SERVER="staging" # [ staging | prod ]
-ARGOCD_HELM_CHART_VERSION="4.2.1"
-ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
-ARGOCD_NAMESPACE="argocd-infra"
-ARGOCD_GROUP_ADMIN="d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"
-ARGOCD_GROUP_CONTRIBUTOR="1a04b576-9448-43ee-ba64-be7cbb1af561"
-ARGOCD_TLS_SECRET="argocd-tls-${ARGOCD_LETS_ENCRYPT_SERVER?}"
-ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
-ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
-CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-${ARGOCD_LETS_ENCRYPT_SERVER?}-application-gateway"
-INGRESS_CLASS_NAME="azure-application-gateway"
+export ARGOCD_TEMPORARY_DIRECTORY="${HOME}/.helm/argocd"
+export ARGOCD_TEMPLATES_DIRECTORY="${SCRIPTS_DIRECTORY}/../templates/argocd"
+export ARGOCD_LETS_ENCRYPT_SERVER="prod" # [ staging | prod ]
+export ARGOCD_HELM_CHART_VERSION="4.2.2"
+export ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
+export ARGOCD_NAMESPACE="argocd-infra"
+export ARGOCD_GROUP_ADMIN="d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"
+export ARGOCD_GROUP_CONTRIBUTOR="1a04b576-9448-43ee-ba64-be7cbb1af561"
+export ARGOCD_TLS_SECRET="argocd-tls-${ARGOCD_LETS_ENCRYPT_SERVER?}"
+export ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
+export ARGOCD_HELM_FILE_SERVICE="${ARGOCD_TEMPORARY_DIRECTORY}/values.yaml"
+export CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-${ARGOCD_LETS_ENCRYPT_SERVER?}-application-gateway"
+export INGRESS_CLASS_NAME="azure-application-gateway"
 
-mkdir -p "${HOME}/.helm/argocd/"
+mkdir -p "${ARGOCD_TEMPORARY_DIRECTORY?}"
 
 echo ""
 echo "argocd:"
 echo "  helmChartversion:     ${ARGOCD_HELM_CHART_VERSION}"
 echo "  namespace:            ${ARGOCD_NAMESPACE}"
 echo "  host:                 ${ARGOCD_HOST}"
-echo "  values:               ${ARGOCD_HELM_FILE_SERVICE}"
 echo "  ssoAppRegistrationId: ${ARGOCD_APP_REGISTRATION_ID}"
 echo "  clusterIssuer:        ${CERT_MANAGER_CLUSTER_ISSUER}"
 echo "  ingressClassName:     ${INGRESS_CLASS_NAME}"
 echo "  tlsSecret:            ${ARGOCD_TLS_SECRET}"
+echo "  values:               ${ARGOCD_HELM_FILE_SERVICE}"
+echo "  templates:            ${ARGOCD_TEMPLATES_DIRECTORY}"
+echo "  workDir:              ${ARGOCD_TEMPORARY_DIRECTORY}"
 echo ""
 
-cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
-fullnameOverride: "argocd"
-server:
-  extraArgs:
-    - --insecure
-  ingress:
-    enabled: true
-    https: false
-    ingressClassName: "${INGRESS_CLASS_NAME?}"
-    hosts:
-      - ${ARGOCD_HOST?}
-    pathType: ImplementationSpecific
-    paths:
-      - /
-      - /argocd
-    tls:
-      - secretName: ${ARGOCD_TLS_SECRET?}
-        hosts:
-          - ${ARGOCD_HOST?}
-    annotations:
-      appgw.ingress.kubernetes.io/backend-protocol: "http"
-      cert-manager.io/cluster-issuer: ${CERT_MANAGER_CLUSTER_ISSUER?}
-  config:
-    url: https://${ARGOCD_HOST?}
-    users.anonymous.enabled: "false"
-    admin.enabled: "false"
-    oidc.config: |
-      name: AzureAD
-      issuer: https://login.microsoftonline.com/${ARM_TENANT_ID?}/v2.0
-      clientID: ${ARGOCD_APP_REGISTRATION_ID?}
-      clientSecret: \$oidc.azuread.clientSecret
-      requestedIDTokenClaims:
-        groups:
-          essential: true
-      requestedScopes:
-        - openid
-        - profile
-        - email
-  rbacConfig:
-    policy.csv: |
-      p, role:app-contributor, applications, delete, default/*, allow
-      p, role:app-contributor, applications, get, default/*, allow
-      p, role:app-contributor, applications, sync, default/*, allow
-      p, role:app-contributor, applications, action/apps/Deployment/restart*, default/*, allow
-      g, "${ARGOCD_GROUP_CONTRIBUTOR?}", role:app-contributor
-      g, "${ARGOCD_GROUP_CONTRIBUTOR?}", role:readonly
-      g, "${ARGOCD_GROUP_ADMIN?}", role:admin
-    policy.default: role:empty
-  additionalApplications:
-    - name: httpbin
-      namespace: ${ARGOCD_NAMESPACE}
-      additionalLabels: {}
-      additionalAnnotations: {}
-      finalizers:
-        - resources-finalizer.argocd.argoproj.io
-      project: default
-      source:
-        targetRevision: HEAD
-        repoURL: git@github.com:smsilva/wasp-gitops.git
-        path: charts/httpbin
-      destination:
-        name: in-cluster
-        namespace: httpbin
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-EOF
+export DOLLAR='$'
+
+envsubst < "${ARGOCD_TEMPLATES_DIRECTORY}/values-template-full.yaml" > "${ARGOCD_HELM_FILE_SERVICE?}"
+
+while read FILE_NAME; do
+  BASE_FILE_NAME="$(basename ${FILE_NAME?})"
+
+  envsubst < "${FILE_NAME?}" > "${ARGOCD_TEMPORARY_DIRECTORY?}/${BASE_FILE_NAME?}"
+done <<< "$(find "${ARGOCD_TEMPLATES_DIRECTORY?}" -type f)"
 
 helm upgrade \
   --install \
@@ -112,6 +55,10 @@ helm upgrade \
   --create-namespace \
   argocd argo/argo-cd \
   --version "${ARGOCD_HELM_CHART_VERSION?}" \
-  --values "${ARGOCD_HELM_FILE_SERVICE?}" \
-  --values "${SCRIPTS_DIRECTORY}/../argocd-configs-known-hosts.yaml" \
-  --values "${SCRIPTS_DIRECTORY}/../argocd-extra-objects.yaml"
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-ingress.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-sso.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-rbac-config.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-configs-known-hosts.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-extra-objects.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-additional-applications.yaml"
