@@ -9,7 +9,7 @@ helm repo add argo https://argoproj.github.io/argo-helm &> /dev/null
 helm repo update argo &> /dev/null
 helm search repo argo
 
-export ARGOCD_TEMPORARY_DIRECTORY="${HOME}/.helm/argocd"
+export ARGOCD_TEMPORARY_DIRECTORY="${HOME}/trash/aks-app-gw/argocd"
 export ARGOCD_TEMPLATES_DIRECTORY="${SCRIPTS_DIRECTORY}/../templates/argocd"
 export ARGOCD_LETS_ENCRYPT_SERVER="prod" # [ staging | prod ]
 export ARGOCD_HELM_CHART_VERSION="4.2.2"

@@ -1,6 +1,4 @@
 #!/bin/bash
-echo ""
-
 SCRIPT_PATH="$(dirname $0)"
 
 NAMESPACE=${1-argocd-infra}
@@ -10,13 +8,8 @@ ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
 mkdir -p "${HOME}/.helm/argocd/"
 
 helm repo add argo https://argoproj.github.io/argo-helm
-echo ""
-
 helm repo update argo
-echo ""
-
 helm search repo argo
-echo ""
 
 ARGOCD_APP_REGISTRATION_ID="${ARGOCD_APP_REGISTRATION_ID?}"
 ARGOCD_HOST="${ARGOCD_HOST?}"
@@ -73,11 +66,3 @@ helm upgrade \
   --values "${ARGOCD_HELM_FILE_SERVICE?}" \
   --values "${SCRIPT_PATH}/extra-objects.yaml" \
   --wait
-
-echo ""
-
-kubectl ${NAMESPACE?} get ingress
-echo ""
-
-dig @8.8.8.8 ${ARGOCD_HOST?}
-echo ""

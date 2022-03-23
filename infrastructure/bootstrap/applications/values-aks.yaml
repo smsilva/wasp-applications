@@ -1,4 +1,7 @@
 applications:
+  - name: namespaces
+    wave: 1
+
   - name: istio-base
     namespace: istio
     wave: 1
@@ -6,5 +9,3 @@ applications:
   - name: istio-istiod
     namespace: istio
     wave: 2
-
-  - name: namespaces

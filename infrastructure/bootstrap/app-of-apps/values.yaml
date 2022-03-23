@@ -2,7 +2,6 @@ global:
   environment:
     id: blue
     domain: eastus2.sandbox.wasp.silvios.me
-    namespace: argocd-infra
 
 helm:
   files:

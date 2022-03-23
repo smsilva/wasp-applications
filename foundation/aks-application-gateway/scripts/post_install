@@ -37,4 +37,4 @@ kubectl \
   annotate ingress ${SOLVER_INGRESS_NAME?} description-
 
 kubectl patch ingress \${SOLVER_INGRESS_NAME?} \
- --patch'{"spec":{"ingressClassName": azure-application-gateway}}'
+  --patch'{"spec":{"ingressClassName": azure-application-gateway}}'

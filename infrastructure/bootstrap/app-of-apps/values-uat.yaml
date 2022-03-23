@@ -1,0 +1,4 @@
+global:
+  environment:
+    id: blue
+    domain: eastus2.uat.wasp.silvios.me
