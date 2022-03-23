@@ -19,7 +19,7 @@ extraObjects:
   - apiVersion: external-secrets.io/v1alpha1
     kind: ExternalSecret
     metadata:
-      name: argocd-ssh-auth
+      name: argocd-repo-creds-github
     spec:
       refreshInterval: 1h
       secretStoreRef:
@@ -27,31 +27,7 @@ extraObjects:
         name: azure-subscription-key-vault
     
       target:
-        name: argocd-ssh-auth
-        creationPolicy: Owner
-        template:
-          type: kubernetes.io/ssh-auth
-          data:
-            ssh-privatekey: |
-              {{`{{ .idrsabase64filecontent | base64decode | toString }}`}}
-    
-      data:
-      - secretKey: "idrsabase64filecontent"
-        remoteRef:
-          key: secret/git-ssh-private-key-file-contents-base64-encoded
-
-  - apiVersion: external-secrets.io/v1alpha1
-    kind: ExternalSecret
-    metadata:
-      name: argocd-repo-creds
-    spec:
-      refreshInterval: 1h
-      secretStoreRef:
-        kind: ClusterSecretStore
-        name: azure-subscription-key-vault
-    
-      target:
-        name: argocd-repo-creds
+        name: argocd-repo-creds-github
         creationPolicy: Owner
         template:
           metadata:
@@ -69,8 +45,46 @@ extraObjects:
       data:
         - secretKey: "idrsabase64filecontent"
           remoteRef:
-            key: secret/git-ssh-private-key-file-contents-base64-encoded
+            key: secret/argocd-repo-creds-base64-encoded-private-key-github
     
         - secretKey: "privaterepourl"
           remoteRef:
-            key: secret/git-ssh-private-repo-url-github-smsilva-wasp-gitops
+            key: secret/argocd-repo-creds-url-github
+
+  - apiVersion: external-secrets.io/v1alpha1
+    kind: ExternalSecret
+    metadata:
+      name: argocd-repository-github
+    spec:
+      refreshInterval: 1h
+      secretStoreRef:
+        kind: ClusterSecretStore
+        name: azure-subscription-key-vault
+    
+      target:
+        name: argocd-repository-github
+        creationPolicy: Owner
+        template:
+          metadata:
+            annotations:
+              managed-by: argocd.argoproj.io
+            labels:
+              argocd.argoproj.io/secret-type: repository
+          type: Opaque
+    
+      data:
+        - secretKey: "name"
+          remoteRef:
+            key: secret/argocd-repository-github-name
+    
+        - secretKey: "project"
+          remoteRef:
+            key: secret/argocd-repository-github-project
+    
+        - secretKey: "type"
+          remoteRef:
+            key: secret/argocd-repository-github-type
+    
+        - secretKey: "url"
+          remoteRef:
+            key: secret/argocd-repository-github-url

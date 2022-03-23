@@ -33,12 +33,6 @@ echo ""
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
 fullnameOverride: "argocd"
-configs:
-  repositories:
-    wasp:
-      url: "git@github.com:smsilva/wasp-gitops.git"
-      name: "wasp-gitops"
-      type: "git"
 server:
   extraArgs:
     - --insecure
@@ -84,6 +78,7 @@ helm upgrade \
   argocd argo/argo-cd \
   --version "${ARGOCD_VERSION?}" \
   --values "${ARGOCD_HELM_FILE_SERVICE?}" \
+  --values "${SCRIPTS_DIRECTORY}/../argocd-configs-known-hosts.yaml" \
   --values "${SCRIPTS_DIRECTORY}/../argocd-extra-objects.yaml"
 
 echo ""
