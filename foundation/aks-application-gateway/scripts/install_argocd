@@ -10,9 +10,11 @@ helm repo update argo &> /dev/null
 helm search repo argo
 
 ARGOCD_LETS_ENCRYPT_SERVER="staging" # [ staging | prod ]
-ARGOCD_VERSION="4.2.1"
+ARGOCD_HELM_CHART_VERSION="4.2.1"
 ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
 ARGOCD_NAMESPACE="argocd-infra"
+ARGOCD_GROUP_ADMIN="d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"
+ARGOCD_GROUP_CONTRIBUTOR="1a04b576-9448-43ee-ba64-be7cbb1af561"
 ARGOCD_TLS_SECRET="argocd-tls-${ARGOCD_LETS_ENCRYPT_SERVER?}"
 ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
 ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
@@ -23,7 +25,7 @@ mkdir -p "${HOME}/.helm/argocd/"
 
 echo ""
 echo "argocd:"
-echo "  version:              ${ARGOCD_VERSION}"
+echo "  helmChartversion:     ${ARGOCD_HELM_CHART_VERSION}"
 echo "  namespace:            ${ARGOCD_NAMESPACE}"
 echo "  host:                 ${ARGOCD_HOST}"
 echo "  values:               ${ARGOCD_HELM_FILE_SERVICE}"
@@ -77,9 +79,9 @@ server:
       p, role:app-contributor, applications, get, default/*, allow
       p, role:app-contributor, applications, sync, default/*, allow
       p, role:app-contributor, applications, action/apps/Deployment/restart*, default/*, allow
-      g, "1a04b576-9448-43ee-ba64-be7cbb1af561", role:app-contributor
-      g, "1a04b576-9448-43ee-ba64-be7cbb1af561", role:readonly
-      g, "d5075d0a-3704-4ed9-ad62-dc8068c7d0e1", role:admin
+      g, "${ARGOCD_GROUP_CONTRIBUTOR?}", role:app-contributor
+      g, "${ARGOCD_GROUP_CONTRIBUTOR?}", role:readonly
+      g, "${ARGOCD_GROUP_ADMIN?}", role:admin
     policy.default: role:empty
   additionalApplications:
     - name: httpbin
@@ -109,7 +111,7 @@ helm upgrade \
   --namespace ${ARGOCD_NAMESPACE?} \
   --create-namespace \
   argocd argo/argo-cd \
-  --version "${ARGOCD_VERSION?}" \
+  --version "${ARGOCD_HELM_CHART_VERSION?}" \
   --values "${ARGOCD_HELM_FILE_SERVICE?}" \
   --values "${SCRIPTS_DIRECTORY}/../argocd-configs-known-hosts.yaml" \
   --values "${SCRIPTS_DIRECTORY}/../argocd-extra-objects.yaml"
