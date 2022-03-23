@@ -55,6 +55,7 @@ helm upgrade \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-ingress.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-sso.yaml" \
+  --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-custom-health-check.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-rbac-config.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-configs-known-hosts.yaml" \
   --values "${ARGOCD_TEMPORARY_DIRECTORY}/values-extra-objects.yaml" \

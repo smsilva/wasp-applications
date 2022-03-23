@@ -9,7 +9,7 @@ spec:
   project: infra
 
   source:
-    repoURL: https://github.com/smsilva/wasp-gitops
+    repoURL: git@github.com:smsilva/wasp-gitops.git
     path: infrastructure/bootstrap/applications
     targetRevision: HEAD
     {{- with $.Values.global.environment }}
