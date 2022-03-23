@@ -3,7 +3,7 @@ server:
     - name: infra
       description: Infrastructure
       sourceRepos:
-        - https://github.com/smsilva/wasp-gitops
+        - git@github.com:smsilva/wasp-gitops.git
       destinations:
         - name: in-cluster
           namespace: '*'

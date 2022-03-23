@@ -34,7 +34,7 @@ spec:
   {{- else }}
 
   source:
-    repoURL: https://github.com/smsilva/wasp-gitops.git
+    repoURL: git@github.com:smsilva/wasp-gitops.git
     targetRevision: HEAD
     path: infrastructure/charts/{{ $application.name }}
   {{- with $.Values.global.environment }}
