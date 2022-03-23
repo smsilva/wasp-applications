@@ -9,13 +9,14 @@ helm repo add argo https://argoproj.github.io/argo-helm &> /dev/null
 helm repo update argo &> /dev/null
 helm search repo argo
 
+ARGOCD_LETS_ENCRYPT_SERVER="staging" # [ staging | prod ]
 ARGOCD_VERSION="4.2.1"
 ARGOCD_HOST="argocd-blue.eastus2.sandbox.wasp.silvios.me"
 ARGOCD_NAMESPACE="argocd-infra"
-ARGOCD_TLS_SECRET="argocd-tls-staging"
+ARGOCD_TLS_SECRET="argocd-tls-${ARGOCD_LETS_ENCRYPT_SERVER?}"
 ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
 ARGOCD_HELM_FILE_SERVICE="${HOME}/.helm/argocd/values.yaml"
-CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-staging-application-gateway"
+CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-${ARGOCD_LETS_ENCRYPT_SERVER?}-application-gateway"
 INGRESS_CLASS_NAME="azure-application-gateway"
 
 mkdir -p "${HOME}/.helm/argocd/"
@@ -29,6 +30,7 @@ echo "  values:               ${ARGOCD_HELM_FILE_SERVICE}"
 echo "  ssoAppRegistrationId: ${ARGOCD_APP_REGISTRATION_ID}"
 echo "  clusterIssuer:        ${CERT_MANAGER_CLUSTER_ISSUER}"
 echo "  ingressClassName:     ${INGRESS_CLASS_NAME}"
+echo "  tlsSecret:            ${ARGOCD_TLS_SECRET}"
 echo ""
 
 cat <<EOF > "${ARGOCD_HELM_FILE_SERVICE?}"
@@ -69,6 +71,37 @@ server:
         - openid
         - profile
         - email
+  rbacConfig:
+    policy.csv: |
+      p, role:app-contributor, applications, delete, default/*, allow
+      p, role:app-contributor, applications, get, default/*, allow
+      p, role:app-contributor, applications, sync, default/*, allow
+      p, role:app-contributor, applications, action/apps/Deployment/restart*, default/*, allow
+      g, "1a04b576-9448-43ee-ba64-be7cbb1af561", role:app-contributor
+      g, "1a04b576-9448-43ee-ba64-be7cbb1af561", role:readonly
+      g, "d5075d0a-3704-4ed9-ad62-dc8068c7d0e1", role:admin
+    policy.default: role:empty
+  additionalApplications:
+    - name: httpbin
+      namespace: ${ARGOCD_NAMESPACE}
+      additionalLabels: {}
+      additionalAnnotations: {}
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+      project: default
+      source:
+        targetRevision: HEAD
+        repoURL: git@github.com:smsilva/wasp-gitops.git
+        path: charts/httpbin
+      destination:
+        name: in-cluster
+        namespace: httpbin
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 EOF
 
 helm upgrade \
@@ -96,6 +129,8 @@ kubectl \\
   --cert=argocd-blue.eastus2.sandbox.wasp.silvios.me.pem \\
   --key=argocd-blue.eastus2.sandbox.wasp.silvios.me.key \\
   --namespace argocd-infra
+
+kubectl logs -f -l app=ingress-azure  
 
 EOF
 

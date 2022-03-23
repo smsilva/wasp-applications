@@ -79,19 +79,21 @@ kubectl -n argocd apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: wasp-gitops
-  labels:
-    argocd.silvios.me/type: secret
+  name: httpbin
+  namespace: argocd
 spec:
   destination:
+    name: in-cluster
     namespace: httpbin
-    server: https://kubernetes.default.svc
   project: default
   source:
     path: charts/httpbin
     repoURL: git@github.com:smsilva/wasp-gitops.git
     targetRevision: HEAD
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
     - CreateNamespace=true
 EOF
