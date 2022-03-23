@@ -19,7 +19,6 @@ export ARGOCD_GROUP_ADMIN="d5075d0a-3704-4ed9-ad62-dc8068c7d0e1"
 export ARGOCD_GROUP_CONTRIBUTOR="1a04b576-9448-43ee-ba64-be7cbb1af561"
 export ARGOCD_TLS_SECRET="argocd-tls-${ARGOCD_LETS_ENCRYPT_SERVER?}"
 export ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
-export ARGOCD_HELM_FILE_SERVICE="${ARGOCD_TEMPORARY_DIRECTORY}/values.yaml"
 export CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-${ARGOCD_LETS_ENCRYPT_SERVER?}-application-gateway"
 export INGRESS_CLASS_NAME="azure-application-gateway"
 
@@ -34,14 +33,12 @@ echo "  ssoAppRegistrationId: ${ARGOCD_APP_REGISTRATION_ID}"
 echo "  clusterIssuer:        ${CERT_MANAGER_CLUSTER_ISSUER}"
 echo "  ingressClassName:     ${INGRESS_CLASS_NAME}"
 echo "  tlsSecret:            ${ARGOCD_TLS_SECRET}"
-echo "  values:               ${ARGOCD_HELM_FILE_SERVICE}"
 echo "  templates:            ${ARGOCD_TEMPLATES_DIRECTORY}"
 echo "  workDir:              ${ARGOCD_TEMPORARY_DIRECTORY}"
 echo ""
 
+# This will be used when we need to put a '$' sign into the final file.
 export DOLLAR='$'
-
-envsubst < "${ARGOCD_TEMPLATES_DIRECTORY}/values-template-full.yaml" > "${ARGOCD_HELM_FILE_SERVICE?}"
 
 while read FILE_NAME; do
   BASE_FILE_NAME="$(basename ${FILE_NAME?})"
