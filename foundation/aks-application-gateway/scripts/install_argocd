@@ -20,7 +20,7 @@ export ARGOCD_GROUP_CONTRIBUTOR="2deb9d06-5807-4107-a5a6-94368f39d79f"
 export ARGOCD_TLS_SECRET="argocd-tls-${ARGOCD_LETS_ENCRYPT_SERVER?}"
 export ARGOCD_APP_REGISTRATION_ID="5b59d3e0-04f4-4be4-aff4-b159a8ed4b46"
 export CERT_MANAGER_CLUSTER_ISSUER="letsencrypt-${ARGOCD_LETS_ENCRYPT_SERVER?}-application-gateway"
-export INGRESS_CLASS_NAME="azure-application-gateway"
+export INGRESS_CLASS_NAME="azure/application-gateway"
 
 mkdir -p "${ARGOCD_TEMPORARY_DIRECTORY?}"
 

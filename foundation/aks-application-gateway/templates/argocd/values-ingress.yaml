@@ -4,7 +4,6 @@ server:
   ingress:
     enabled: true
     https: false
-    ingressClassName: "${INGRESS_CLASS_NAME}"
     hosts:
       - ${ARGOCD_HOST}
     pathType: ImplementationSpecific
@@ -16,5 +15,6 @@ server:
         hosts:
           - ${ARGOCD_HOST}
     annotations:
+      kubernetes.io/ingress.class: "${INGRESS_CLASS_NAME}"
       appgw.ingress.kubernetes.io/backend-protocol: "http"
       cert-manager.io/cluster-issuer: ${CERT_MANAGER_CLUSTER_ISSUER}

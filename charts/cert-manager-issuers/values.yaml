@@ -8,7 +8,7 @@ letsencrypt:
       url:   https://acme-v02.api.letsencrypt.org/directory
   issuers:
     - name:  application-gateway
-      class: azure-application-gateway
+      class: azure/application-gateway
 
     - name:  nginx
       class: nginx
