@@ -1,7 +1,7 @@
 global:
   environment:
-    id: blue
-    domain: eastus2.sandbox.wasp.silvios.me
+    id: undefined-id
+    domain: sandbox.wasp.silvios.me
 
 helm:
   files:
