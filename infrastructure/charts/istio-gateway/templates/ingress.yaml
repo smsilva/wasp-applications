@@ -1,0 +1,38 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: application-gateway
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+    appgw.ingress.kubernetes.io/request-timeout: "70"
+spec:
+  tls:
+    - hosts:
+      {{- range $host := .Values.hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: selfsigned-tls-secret-bees-services
+  rules:
+  {{- range $host := .Values.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - path: /api/*
+            backend:
+              service:
+                name: istio-gateway
+                port:
+                  number: 80
+            pathType: ImplementationSpecific
+
+          - path: /
+            backend:
+              service:
+                name: istio-gateway
+                port:
+                  number: 80
+            pathType: ImplementationSpecific
+  {{- end }}

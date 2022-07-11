@@ -1,0 +1,53 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: application-gateway
+spec:
+  hosts:
+  {{- range $host := .Values.hosts }}
+    - {{ . }}
+  {{- end }}
+
+  gateways:
+    - application-gateway
+
+  http:
+    - name: "Match /nginx"
+      match:
+        - uri:
+            prefix: /nginx
+          ignoreUriCase: true
+
+      rewrite:
+        uri: "/"
+
+      route:
+        - destination:
+            host: nginx.nginx.svc.cluster.local
+
+    - name: "Match /httpbin"
+      match:
+        - uri:
+            prefix: /httpbin
+          ignoreUriCase: true
+
+      rewrite:
+        uri: "/"
+
+      route:
+        - destination:
+            host: httpbin.httpbin.svc.cluster.local
+
+    - name: "all"
+      match:
+        - uri:
+            prefix: /
+          ignoreUriCase: true
+
+      rewrite:
+        uri: "/"
+
+      route:
+        - destination:
+            host: httpbin.httpbin.svc.cluster.local

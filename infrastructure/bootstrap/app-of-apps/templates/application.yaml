@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -12,6 +13,7 @@ spec:
     repoURL: git@github.com:smsilva/wasp-gitops.git
     path: infrastructure/bootstrap/applications
     targetRevision: HEAD
+
     {{- with $.Values.global.environment }}
     helm:
       {{- if $.Values.helm }}
@@ -32,7 +34,7 @@ spec:
 
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: false
+      prune: false
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true

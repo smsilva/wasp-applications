@@ -1,8 +1,8 @@
 global:
   environment:
-    id: wasp-sbx-na-eastus2
-    domain: wasp.sbx.na.silvios.me
-    namespace: argocd-infra
+    id: undefined-id
+    domain: undefined-domain.io
+    namespace: argocd
 
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -13,7 +13,7 @@ global:
 
   syncPolicy:
     automated:
-      prune: true
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true

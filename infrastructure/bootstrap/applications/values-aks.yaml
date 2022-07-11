@@ -3,9 +3,9 @@ applications:
     wave: 1
 
   - name: istio-base
-    namespace: istio
-    wave: 1
-
-  - name: istio-istiod
-    namespace: istio
+    namespace: istio-system
     wave: 2
+
+  - name: istio-control-plane
+    namespace: istio-system
+    wave: 3
