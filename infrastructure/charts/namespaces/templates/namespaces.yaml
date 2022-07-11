@@ -5,7 +5,7 @@ kind: Namespace
 metadata:
   name: {{ $namespace.name }}
   labels:
-    istio-injection: {{ ($namespace.istioInjection | quote) | default "false" | quote }}
+    istio-injection: {{ ($namespace.istio | quote) | default "false" | quote }}
     {{- if $.Values.global }}
     {{- with $.Values.global.environment }}
     silvios.me/enviroment-id: "{{ (.id) | default "undefined" }}"

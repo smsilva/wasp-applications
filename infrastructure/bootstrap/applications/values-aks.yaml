@@ -9,3 +9,11 @@ applications:
   - name: istio-control-plane
     namespace: istio-system
     wave: 3
+
+  - name: httpbin
+    namespace: httpbin
+    wave: 4
+
+  - name: nginx
+    namespace: nginx
+    wave: 4
