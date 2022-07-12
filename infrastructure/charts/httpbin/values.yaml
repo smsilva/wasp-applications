@@ -38,19 +38,20 @@ service:
 
 ingress:
   enabled: false
-  className: "nginx"
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-nginx-staging
+    external-dns.alpha.kubernetes.io/ttl: 1m
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
   hosts:
-    - host: echo.sandbox.wasp.silvios.me
+    - host: echo.example-helm-charts-31q.sandbox.wasp.silvios.me
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: httpbin-ingress-tls
+      hosts:
+         - echo.example-helm-charts-31q.sandbox.wasp.silvios.me
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
