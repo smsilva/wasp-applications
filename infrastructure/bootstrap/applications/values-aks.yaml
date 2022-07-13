@@ -10,6 +10,10 @@ applications:
     namespace: istio-system
     wave: 3
 
+  - name: istio-gateway
+    namespace: istio-ingress
+    wave: 4
+
   - name: httpbin
     namespace: httpbin
     wave: 4

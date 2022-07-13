@@ -6,3 +6,6 @@ namespaces:
 
   - name: nginx
     istio: true
+
+  - name: istio-ingress
+    istio: true
