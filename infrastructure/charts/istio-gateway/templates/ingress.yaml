@@ -2,19 +2,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: application-gateway
+  name: {{ .Values.name }}
   annotations:
-    kubernetes.io/ingress.class: azure/application-gateway
-    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
-    appgw.ingress.kubernetes.io/request-timeout: "70"
+  {{- with .Values.annotations.ingress }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   tls:
     - hosts:
       {{- range $host := .Values.hosts }}
         - {{ . }}
       {{- end }}
-      secretName: selfsigned-tls-secret-bees-services
+      secretName: ingress-tls-{{ .Values.name }}-selfsigned
   rules:
   {{- range $host := .Values.hosts }}
     - host: {{ . }}

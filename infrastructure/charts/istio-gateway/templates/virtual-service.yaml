@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: application-gateway
+  name: {{ .Values.name }}
 spec:
   hosts:
   {{- range $host := .Values.hosts }}
@@ -10,7 +10,7 @@ spec:
   {{- end }}
 
   gateways:
-    - application-gateway
+    - {{ .Values.name }}
 
   http:
     - name: "Match /nginx"

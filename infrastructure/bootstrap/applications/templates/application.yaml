@@ -13,7 +13,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- else }}
-  {{- with $.Values.global.finalizers }}
+  {{- with $.Values.finalizers }}
 
   finalizers:
     {{- toYaml . | nindent 4 }}
@@ -53,11 +53,11 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- else }}
-  {{- with $.Values.global.destination }}
+  {{- with $.Values.destination }}
 
   destination:
-    namespace: {{ ($application.namespace) | default ($.Values.global.destination.namespace) }}
-    name: {{ ($application.cluster) | default ($.Values.global.destination.name) }}
+    namespace: {{ ($application.namespace) | default ($.Values.destination.namespace) }}
+    name: {{ ($application.cluster) | default ($.Values.destination.name) }}
   {{- end }}
   {{- end }}
 
@@ -68,7 +68,7 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- else }}
-  {{- with $.Values.global.syncPolicy }}
+  {{- with $.Values.syncPolicy }}
 
   syncPolicy:
     {{- toYaml . | nindent 4 }}

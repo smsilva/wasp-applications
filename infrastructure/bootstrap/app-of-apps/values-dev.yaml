@@ -1,8 +1,0 @@
-global:
-  environment:
-    id: blue
-    domain: eastus2.dev.wasp.silvios.me
-
-helm:
-  files:
-    - values-kind-dev.yaml
