@@ -1,6 +1,5 @@
-# Default values for nginx.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+deployment:
+  color: blue
 
 replicaCount: 1
 

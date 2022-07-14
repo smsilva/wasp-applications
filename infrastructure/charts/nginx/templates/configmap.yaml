@@ -1,0 +1,10 @@
+{{- if .Values.deployment.color }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pages
+data:
+  index.html: |
+{{ (tpl ($.Files.Get "pages/index.html") . ) | indent 4 }}
+{{- end}}
