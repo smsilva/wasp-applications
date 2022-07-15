@@ -1,23 +1,23 @@
 applications:
   - name: namespaces
-    wave: 1
+    wave: 10
 
   - name: istio-base
     namespace: istio-system
-    wave: 2
+    wave: 20
 
   - name: istio-control-plane
     namespace: istio-system
-    wave: 3
+    wave: 30
 
   - name: istio-gateway
     namespace: istio-ingress
-    wave: 4
+    wave: 40
 
   - name: httpbin
     namespace: httpbin
-    wave: 4
+    wave: 40
 
   - name: nginx
     namespace: nginx
-    wave: 4
+    wave: 40

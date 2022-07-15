@@ -10,9 +10,8 @@ spec:
   project: infra
 
   source:
-    repoURL: git@github.com:smsilva/wasp-gitops.git
+    {{- toYaml .Values.source | nindent 4 }}
     path: infrastructure/bootstrap/applications
-    targetRevision: HEAD
 
     {{- with $.Values.global.environment }}
     helm:
@@ -26,6 +25,9 @@ spec:
         global:
           environment:
           {{- toYaml . | nindent 12 }}
+        source:
+          repoURL: {{ $.Values.source.repoURL }}
+          targetRevision: {{ $.Values.source.targetRevision }}
     {{- end }}
 
   destination:

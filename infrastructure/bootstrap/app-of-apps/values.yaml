@@ -6,3 +6,7 @@ global:
 helm:
   files:
     - values-aks.yaml
+
+source:
+  repoURL: git@github.com:smsilva/wasp-gitops.git
+  targetRevision: HEAD
