@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Deployment: {{ .Values.deployment.color }}</title>
+    <title>{{ .Values.deployment.color }}</title>
     <style>
         body {
             text-align: center;
@@ -57,7 +57,7 @@
 </head>
 
 <body class="{{ .Values.deployment.color }}">
-    <h1>Cluster: {{ .Values.global.cluster }}</h1>
+    <h1>id: {{ .Values.global.environment.id }}</h1>
 </body>
 
 </html>
