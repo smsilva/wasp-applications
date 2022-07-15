@@ -34,9 +34,9 @@ spec:
   {{- else }}
 
   source:
-    repoURL: git@github.com:smsilva/wasp-gitops.git
-    targetRevision: HEAD
+    {{- toYaml $.Values.source | nindent 4 }}
     path: infrastructure/charts/{{ $application.name }}
+
   {{- with $.Values.global.environment }}
     helm:
       values: |
@@ -76,21 +76,5 @@ spec:
   {{- end }}
 
   ignoreDifferences:
-    - group: apiextensions.k8s.io
-      kind: CustomResourceDefinition
-      jsonPointers:
-        - /status
-
-    - group: admissionregistration.k8s.io
-      kind: ValidatingWebhookConfiguration
-      jsonPointers:
-        - /webhooks/0/namespaceSelector/matchExpressions/2
-      jqPathExpressions:
-        - '.webhooks[]?.failurePolicy'
-
-    - group: admissionregistration.k8s.io
-      kind: MutatingWebhookConfiguration
-      jqPathExpressions:
-        - '.webhooks[]?.clientConfig.caBundle'
-        - '.webhooks[]?.namespaceSelector.matchExpressions'
+  {{- toYaml $.Values.ignoreDifferences | nindent 4 }}
 {{- end }}

@@ -7,6 +7,10 @@ global:
 finalizers:
   - resources-finalizer.argocd.argoproj.io
 
+source:
+  repoURL: git@github.com:smsilva/wasp-gitops.git
+  targetRevision: HEAD
+
 destination:
   namespace: default
   name: in-cluster
@@ -21,23 +25,32 @@ syncPolicy:
 applications:
   - name: namespaces
     wave: 1
+    syncPolicy:
+      automated:
+        prune: false
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
 
   - name: istio-base
     namespace: istio-system
     wave: 2
 
-  - name: istio-control-plane
-    namespace: istio-system
-    wave: 3
+ignoreDifferences:
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    jsonPointers:
+      - /status
 
-  - name: istio-gateway
-    namespace: istio-ingress
-    wave: 4
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    jsonPointers:
+      - /webhooks/0/namespaceSelector/matchExpressions/2
+    jqPathExpressions:
+      - '.webhooks[]?.failurePolicy'
 
-  - name: httpbin
-    namespace: httpbin
-    wave: 4
-
-  - name: nginx
-    namespace: nginx
-    wave: 4
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    jqPathExpressions:
+      - '.webhooks[]?.clientConfig.caBundle'
+      - '.webhooks[]?.namespaceSelector.matchExpressions'
