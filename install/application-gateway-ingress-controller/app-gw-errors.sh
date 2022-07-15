@@ -101,11 +101,20 @@ kubectl \
 
 kubectl run -it --image=alpine/openssl openssl
 
-s_client -connect 10.246.0.103:8080 -servername argocd-server -showcerts
+s_client \
+  -connect 10.246.0.103:8080 \
+  -servername argocd-server \
+  -showcerts
 
-s_client -connect argocd-server:80 -servername argocd-server -showcerts
+s_client \
+  -connect argocd-server:80 \
+  -servername argocd-server \
+  -showcerts
 
-s_client -connect 10.246.0.28:8080 -servername argocd-blue.eastus2.sandbox.wasp.silvios.me -showcerts
+s_client \
+  -connect 10.246.0.28:8080 \
+  -servername argocd-blue.eastus2.sandbox.wasp.silvios.me \
+  -showcerts
 
 ###############################
 
@@ -141,7 +150,7 @@ kubectl \
   -n argocd-infra rollout restart deploy argocd-server
 
 openssl pkcs12 \
-  -in argocd.bees-platform.dev.pfx \
+  -in argocd.sandbox.wasp.silvios.me.pfx \
   -nocerts \
   -out private.key
 

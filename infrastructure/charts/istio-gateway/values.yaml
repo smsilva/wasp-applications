@@ -3,7 +3,7 @@ gateway:
     type: ClusterIP
 
 hosts:
-  - sandbox.wasp.silvios.me
+  - services.sandbox.wasp.silvios.me
 
 name: application-gateway
 

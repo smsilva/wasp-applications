@@ -13,7 +13,7 @@ spec:
       {{- range $host := .Values.hosts }}
         - {{ . }}
       {{- end }}
-      secretName: ingress-tls-{{ .Values.name }}-selfsigned
+      secretName: ingress-tls-{{ .Values.name }}
   rules:
   {{- range $host := .Values.hosts }}
     - host: {{ . }}
