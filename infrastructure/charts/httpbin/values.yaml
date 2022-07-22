@@ -44,14 +44,14 @@ ingress:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
   hosts:
-    - host: echo.example-helm-charts-31q.sandbox.wasp.silvios.me
+    - host: echo.example-05f.sandbox.wasp.silvios.me
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: httpbin-ingress-tls
       hosts:
-         - echo.example-helm-charts-31q.sandbox.wasp.silvios.me
+         - echo.example-05f.sandbox.wasp.silvios.me
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

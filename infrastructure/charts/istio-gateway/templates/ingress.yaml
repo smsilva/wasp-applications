@@ -10,13 +10,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      {{- range $host := .Values.hosts }}
-        - {{ . }}
-      {{- end }}
+        - services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
       secretName: ingress-tls-{{ .Values.name }}
   rules:
-  {{- range $host := .Values.hosts }}
-    - host: {{ . }}
+    - host: services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
       http:
         paths:
           - path: /api/*
@@ -34,4 +31,3 @@ spec:
                 port:
                   number: 80
             pathType: ImplementationSpecific
-  {{- end }}

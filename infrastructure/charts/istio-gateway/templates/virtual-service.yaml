@@ -5,9 +5,7 @@ metadata:
   name: {{ .Values.name }}
 spec:
   hosts:
-  {{- range $host := .Values.hosts }}
-    - {{ . }}
-  {{- end }}
+    - services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
 
   gateways:
     - {{ .Values.name }}
