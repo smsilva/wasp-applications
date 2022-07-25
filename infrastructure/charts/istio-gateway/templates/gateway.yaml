@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: {{ .Values.name }}
+  name: inbound
 spec:
   selector:
     istio: gateway
@@ -12,6 +12,7 @@ spec:
         number: 80
         name: http
         protocol: HTTP
+
       hosts:
         - "*.silvios.me"
         - "*.cloudapp.azure.com"

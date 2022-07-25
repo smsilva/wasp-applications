@@ -2,13 +2,13 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ .Values.name }}
+  name: inbound
 spec:
   hosts:
     - services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
 
   gateways:
-    - {{ .Values.name }}
+    - inbound
 
   http:
     - name: "Match /nginx"

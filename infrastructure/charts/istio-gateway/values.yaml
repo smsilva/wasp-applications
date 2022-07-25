@@ -2,13 +2,5 @@ gateway:
   service:
     type: ClusterIP
 
-name: application-gateway
-
-annotations:
-  ingress:
-    kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: azure/application-gateway
-    cert-manager.io/cluster-issuer: letsencrypt-application-gateway-staging
-    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
-    appgw.ingress.kubernetes.io/request-timeout: "70"
-    external-dns.alpha.kubernetes.io/ttl: 1m
+ingress:
+  type: azure

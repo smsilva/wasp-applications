@@ -1,17 +1,17 @@
+{{- if eq .Values.ingress.type "nginx" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.name }}
-  annotations:
-  {{- with .Values.annotations.ingress }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
+  ingressClassName: "nginx"
+
   tls:
     - hosts:
         - services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
       secretName: ingress-tls-{{ .Values.name }}
+
   rules:
     - host: services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
       http:
@@ -31,3 +31,4 @@ spec:
                 port:
                   number: 80
             pathType: ImplementationSpecific
+{{- end }}
