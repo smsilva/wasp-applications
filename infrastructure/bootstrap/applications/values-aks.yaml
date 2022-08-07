@@ -6,6 +6,10 @@ applications:
     namespace: newrelic
     wave: 10
 
+  - name: nri-bundle
+    namespace: newrelic
+    wave: 20
+
   - name: istio-base
     namespace: istio-system
     wave: 20
