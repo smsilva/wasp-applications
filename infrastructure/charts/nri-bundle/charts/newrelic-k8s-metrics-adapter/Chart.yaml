@@ -23,4 +23,4 @@ maintainers:
 name: newrelic-k8s-metrics-adapter
 sources:
 - https://github.com/newrelic/newrelic-k8s-metrics-adapter
-version: 0.7.6
+version: 0.7.7

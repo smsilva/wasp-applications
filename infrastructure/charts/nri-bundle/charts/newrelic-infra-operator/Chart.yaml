@@ -32,4 +32,4 @@ name: newrelic-infra-operator
 sources:
 - https://github.com/newrelic/newrelic-infra-operator
 - https://github.com/newrelic/newrelic-infra-operator/tree/master/charts/newrelic-infra-operator
-version: 1.0.4
+version: 1.0.5
