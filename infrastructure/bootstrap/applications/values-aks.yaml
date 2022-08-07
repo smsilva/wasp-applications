@@ -2,6 +2,10 @@ applications:
   - name: namespaces
     wave: 10
 
+  - name: nri-bundle-foundation
+    namespace: newrelic
+    wave: 10
+
   - name: istio-base
     namespace: istio-system
     wave: 20
