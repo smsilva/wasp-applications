@@ -491,7 +491,7 @@ podLabels: {}
 
 # -- Run the integration with full access to the host filesystem and network.
 # Running in this mode allows reporting fine-grained cpu, memory, process and network metrics for your nodes.
-privileged: true
+privileged: false
 # -- Sets pod's priorityClassName. Can be configured also with `global.priorityClassName`
 priorityClassName: ""
 # -- (bool) Sets pod's hostNetwork. Can be configured also with `global.hostNetwork`

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: nri-bundle-foundation
+description: A base configuration for nri-bundle
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
