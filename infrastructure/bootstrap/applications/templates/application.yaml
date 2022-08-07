@@ -35,6 +35,7 @@ spec:
     helm:
       values: |
         global:
+          cluster: {{ $.Values.environment.cluster }}
           environment:
           {{- toYaml . | nindent 12 }}
   {{- end }}

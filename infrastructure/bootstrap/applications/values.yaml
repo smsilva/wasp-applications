@@ -1,6 +1,7 @@
 environment:
   id: undefined-id
   domain: undefined-domain.io
+  cluster: undefined-cluster-name
 
 finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -25,10 +26,6 @@ syncPolicy:
 applications:
   - name: namespaces
     wave: 10
-
-#  - name: istio-base
-#    namespace: istio-system
-#    wave: 20
 
 ignoreDifferences:
   - group: apiextensions.k8s.io

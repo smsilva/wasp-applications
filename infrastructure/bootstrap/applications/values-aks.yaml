@@ -2,12 +2,6 @@ applications:
   - name: namespaces
     wave: 10
 
-  - name: nri-bundle-foundation
-    wave: 10
-
-  - name: nri-bundle
-    wave: 20
-
   - name: istio-base
     namespace: istio-system
     wave: 20
