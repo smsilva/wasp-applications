@@ -1,9 +1,0 @@
-global:
-  environment:
-    id:        wasp-sbx-na-eus2-aks-a
-    domain:    argocd-wasp-sbx-na-a.eastus2.silvios.me
-    namespace: argocd-infra
-
-    argocd:
-      cname: argocd-wasp-sbx-na-a
-      domain: eastus2.cloudapp.azure.com

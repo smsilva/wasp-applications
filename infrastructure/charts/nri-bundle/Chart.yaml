@@ -27,11 +27,11 @@ dependencies:
 - condition: logging.enabled,newrelic-logging.enabled
   name: newrelic-logging
   repository: https://newrelic.github.io/helm-charts
-  version: 1.11.2
+  version: 1.11.3
 - condition: newrelic-pixie.enabled
   name: newrelic-pixie
   repository: https://newrelic.github.io/helm-charts
-  version: 2.0.0
+  version: 2.0.1
 - alias: pixie-chart
   condition: pixie-chart.enabled
   name: pixie-operator-chart
@@ -78,4 +78,4 @@ sources:
 - https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-logging
 - https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-pixie
 - https://github.com/newrelic/newrelic-infra-operator/tree/master/charts/newrelic-infra-operator
-version: 4.8.0
+version: 4.8.2

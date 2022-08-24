@@ -9,3 +9,5 @@ namespaces:
 
   - name: istio-ingress
     istio: true
+
+  - name: newrelic
