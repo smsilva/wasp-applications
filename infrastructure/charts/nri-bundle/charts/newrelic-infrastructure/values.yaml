@@ -158,7 +158,7 @@ ksm:
   # @default -- 100m/150M -/850M
   resources:
     limits:
-      memory: 2G  # Bump me up if KSM pod shows restarts.
+      memory: 4G  # Bump me up if KSM pod shows restarts.
     requests:
       cpu: 100m
       memory: 150M
