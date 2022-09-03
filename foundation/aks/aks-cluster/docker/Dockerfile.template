@@ -1,4 +1,0 @@
-FROM ${AZURE_KUBERNETES_CLUSTER_IMAGE_NAME}:${AZURE_KUBERNETES_CLUSTER_IMAGE_VERSION}
-ENV STACK_INSTANCE_NAME_FINAL="${STACK_INSTANCE_NAME}"
-ADD base.tfvars  /opt/src/terraform.base.auto.tfvars
-ADD extra.tfvars /opt/src/terraform.extra.auto.tfvars

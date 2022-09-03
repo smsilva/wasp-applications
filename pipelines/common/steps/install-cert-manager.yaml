@@ -1,4 +1,0 @@
-steps:
-  - script: |
-      install/cert-manager/install.sh
-    displayName: "cert-manager Install"

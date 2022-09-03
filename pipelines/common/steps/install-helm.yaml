@@ -1,5 +1,0 @@
-steps:
-  - task: HelmInstaller@1
-    displayName: "Helm Install"
-    inputs:
-      helmVersionToInstall: "v3.8.0"

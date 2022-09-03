@@ -1,4 +1,0 @@
-#!/bin/bash
-export PARAMETERS_FILE="${SCRIPTS_DIRECTORY}/../parameters.conf"
-
-source "${PARAMETERS_FILE}"

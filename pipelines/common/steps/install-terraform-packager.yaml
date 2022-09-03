@@ -1,8 +1,0 @@
-steps:
-  - script: |
-      AGENT_PATH=${PATH}:$(Agent.TempDirectory)/terraform-packager/scripts
-
-      echo "##vso[task.setvariable variable=PATH]${AGENT_PATH}"
-
-      git clone https://github.com/smsilva/terraform-packager.git $(Agent.TempDirectory)/terraform-packager
-    displayName: "Terraform Packager Install"
