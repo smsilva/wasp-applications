@@ -3,14 +3,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.name }}
+  name: istio
 spec:
   ingressClassName: "nginx"
 
   tls:
     - hosts:
         - services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
-      secretName: ingress-tls-{{ .Values.name }}
+      secretName: ingress-tls-istio
 
   rules:
     - host: services.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
