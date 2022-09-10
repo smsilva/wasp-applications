@@ -1,7 +1,10 @@
 environment:
   id: undefined-id
   domain: undefined-domain.io
-  cluster: undefined-cluster-name
+  cluster:
+    name: undefined-cluster-name
+    ingress:
+      type: nginx
 
 finalizers:
   - resources-finalizer.argocd.argoproj.io

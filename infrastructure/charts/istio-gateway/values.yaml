@@ -1,6 +1,12 @@
+global:
+  environment:
+    id: undefined-id
+    domain: undefined-domain.io
+    cluster:
+      name: undefined-cluster-name
+      ingress:
+        type: nginx
+
 gateway:
   service:
     type: ClusterIP
-
-ingress:
-  type: azure

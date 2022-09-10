@@ -1,3 +1,12 @@
+global:
+  environment:
+    id: undefined-id
+    domain: undefined-domain.io
+    cluster:
+      name: undefined-cluster-name
+      ingress:
+        type: nginx
+
 replicaCount: 1
 
 image:

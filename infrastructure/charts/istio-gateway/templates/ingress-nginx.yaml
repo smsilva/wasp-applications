@@ -1,4 +1,4 @@
-{{- if eq .Values.ingress.type "nginx" }}
+{{- if eq .Values.global.environment.cluster.ingress.type "nginx" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
