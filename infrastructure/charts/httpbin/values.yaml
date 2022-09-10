@@ -6,6 +6,9 @@ global:
       name: undefined-cluster-name
       ingress:
         type: nginx
+      certificates:
+        type: letsencrypt
+        server: staging
 
 replicaCount: 1
 

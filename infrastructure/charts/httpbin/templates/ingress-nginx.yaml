@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: httpbin
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-nginx-staging
+    cert-manager.io/cluster-issuer: {{ .Values.global.environment.cluster.certificates.type }}-{{ .Values.global.environment.cluster.certificates.server }}-{{ .Values.global.environment.cluster.ingress.type }}
 spec:
   tls:
     - hosts:

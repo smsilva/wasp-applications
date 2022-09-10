@@ -7,7 +7,7 @@ metadata:
   annotations:
     kubernetes.io/tls-acme: "true"
     kubernetes.io/ingress.class: azure/application-gateway
-    cert-manager.io/cluster-issuer: letsencrypt-application-gateway-staging
+    cert-manager.io/cluster-issuer: {{ .Values.global.environment.cluster.certificates.type }}-{{ .Values.global.environment.cluster.certificates.server }}-{{ .Values.global.environment.cluster.ingress.type }}
     appgw.ingress.kubernetes.io/backend-path-prefix: "/"
     appgw.ingress.kubernetes.io/request-timeout: "70"
     external-dns.alpha.kubernetes.io/ttl: 1m
