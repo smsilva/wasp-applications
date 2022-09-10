@@ -25,3 +25,7 @@ applications:
   - name: httpbin
     namespace: httpbin
     wave: 40
+
+  - name: nginx
+    namespace: nginx
+    wave: 40
