@@ -1,0 +1,11 @@
+applications:
+  - name: namespaces
+    wave: 10
+
+  - name: nri-bundle-foundation
+    namespace: newrelic
+    wave: 10
+
+  - name: nri-bundle
+    namespace: newrelic
+    wave: 20
