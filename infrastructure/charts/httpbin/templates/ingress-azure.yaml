@@ -15,20 +15,9 @@ spec:
   tls:
     - hosts:
         - httpbin.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
-      secretName: ingress-tls-httpbin
+      secretName: ingress-tls-httpbin-strict
 
   rules:
-    - host: httpbin.sandbox.wasp.silvios.me
-      http:
-        paths:
-          - path: /
-            backend:
-              service:
-                name: httpbin
-                port:
-                  number: 80
-            pathType: ImplementationSpecific
-
     - host: httpbin.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
       http:
         paths:
