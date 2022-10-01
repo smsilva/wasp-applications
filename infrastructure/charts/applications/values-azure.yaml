@@ -9,3 +9,7 @@ applications:
   - name: nri-bundle
     namespace: newrelic
     wave: 20
+
+  - name: httpbin
+    namespace: httpbin
+    wave: 40
