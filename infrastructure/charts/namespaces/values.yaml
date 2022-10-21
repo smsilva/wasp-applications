@@ -1,13 +1,8 @@
 namespaces:
-  - name: silvios
+  - name: example
+    istio: true
   
   - name: httpbin
-    istio: true
-
-  - name: nginx
-    istio: true
-
-  - name: istio-ingress
     istio: true
 
   - name: newrelic
