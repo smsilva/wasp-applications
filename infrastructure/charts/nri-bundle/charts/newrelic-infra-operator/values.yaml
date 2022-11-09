@@ -26,9 +26,9 @@ image:
 # @default -- See `values.yaml`
 admissionWebhooksPatchJob:
   image:
-    registry: k8s.gcr.io
+    registry:  # Defaults to k8s.gcr.io
     repository: ingress-nginx/kube-webhook-certgen
-    tag: v1.1.1
+    tag: v1.3.0
     pullPolicy: IfNotPresent
     # -- The secrets that are needed to pull images from a custom registry.
     pullSecrets: []
@@ -136,7 +136,7 @@ config:
       # @default -- See `values.yaml`
       image:
         repository: newrelic/infrastructure-k8s
-        tag: 2.10.0-unprivileged
+        tag: 2.13.4-unprivileged
         pullPolicy: IfNotPresent
 
       # -- configSelectors is the way to configure resource requirements and extra envVars of the injected sidecar container.

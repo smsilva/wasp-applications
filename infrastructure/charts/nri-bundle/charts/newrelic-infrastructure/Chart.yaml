@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: 3.4.1
+appVersion: 3.5.0
 dependencies:
 - name: common-library
   repository: https://helm-charts.newrelic.com
-  version: 1.0.5
+  version: 1.1.0
 description: A Helm chart to deploy the New Relic Kubernetes monitoring solution
 home: https://docs.newrelic.com/docs/kubernetes-pixie/kubernetes-integration/get-started/introduction-kubernetes-integration/
 icon: https://newrelic.com/themes/custom/curio/assets/mediakit/NR_logo_Horizontal.svg
@@ -31,6 +31,6 @@ maintainers:
 name: newrelic-infrastructure
 sources:
 - https://github.com/newrelic/nri-kubernetes/
-- https://github.com/newrelic/nri-kubernetes/tree/master/charts/newrelic-infrastructure
+- https://github.com/newrelic/nri-kubernetes/tree/main/charts/newrelic-infrastructure
 - https://github.com/newrelic/infrastructure-agent/
-version: 3.8.0
+version: 3.9.0

@@ -24,7 +24,7 @@ spec:
       {{- end }}
       containers:
         - name: patch
-          image: {{ include "newrelic.common.images.image" ( dict "imageRoot" .Values.jobImage "context" .) }}
+          image: {{ include "newrelic.common.images.image" ( dict "defaultRegistry" "k8s.gcr.io" "imageRoot" .Values.jobImage "context" .) }}
           imagePullPolicy: {{ .Values.jobImage.pullPolicy }}
           args:
             - patch
@@ -47,6 +47,10 @@ spec:
         runAsGroup: 2000
         runAsNonRoot: true
         runAsUser: 2000
+      {{- with include "newrelic.common.nodeSelector" . }}
+      nodeSelector:
+        {{- . | nindent 8 -}}
+      {{- end }}
       {{- if .Values.tolerations }}
       tolerations:
         {{- toYaml .Values.tolerations | nindent 8 }}

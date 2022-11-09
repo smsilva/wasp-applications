@@ -1,3 +1,6 @@
+{{- $olmCRDFound := false }} 
+{{- range $index, $crdLookup := (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "").items -}}{{ if eq $crdLookup.metadata.name "operators.operators.coreos.com"}}{{ $olmCRDFound = true }}{{ end }}{{end}} 
+{{ if not $olmCRDFound }}{{ fail "CRDs missing! Please deploy CRDs from https://github.com/pixie-io/pixie/tree/main/k8s/operator/helm/crds to continue with deploy." }}{{end}} 
 {{- $lookupLen := 0 -}}{{- $opLookup := (lookup "operators.coreos.com/v1" "OperatorGroup" "" "").items -}}{{if $opLookup }}{{ $lookupLen = len $opLookup }}{{ end }}
 {{ if (or (eq (.Values.deployOLM | toString) "true") (and (not (eq (.Values.deployOLM | toString) "false")) (eq $lookupLen 0))) }}
 ---
@@ -65,7 +68,7 @@ spec:
           - $(OPERATOR_NAMESPACE)
           - --writeStatusName
           - ""
-          image: quay.io/operator-framework/olm@sha256:b706ee6583c4c3cf8059d44234c8a4505804adcc742bcddb3d1e2f6eff3d6519
+          image: {{ if .Values.registry }}{{ .Values.registry }}/quay.io-operator-framework-olm{{ else }}quay.io/operator-framework/olm@sha256:b706ee6583c4c3cf8059d44234c8a4505804adcc742bcddb3d1e2f6eff3d6519{{ end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -125,10 +128,10 @@ spec:
           args:
           - '-namespace'
           - {{ .Values.olmNamespace }}
-          - -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
+          - -configmapServerImage={{ if .Values.registry }}{{ .Values.registry }}/quay.io-operator-framework-{{ else }}quay.io/operator-framework/{{ end }}configmap-operator-registry:latest
           - -util-image
-          -  quay.io/operator-framework/olm@sha256:b706ee6583c4c3cf8059d44234c8a4505804adcc742bcddb3d1e2f6eff3d6519
-          image: quay.io/operator-framework/olm@sha256:b706ee6583c4c3cf8059d44234c8a4505804adcc742bcddb3d1e2f6eff3d6519
+          -  {{ if .Values.registry }}{{ .Values.registry }}/quay.io-operator-framework-olm{{ else }}quay.io/operator-framework/olm@sha256:b706ee6583c4c3cf8059d44234c8a4505804adcc742bcddb3d1e2f6eff3d6519{{ end }}
+          image: {{ if .Values.registry }}{{ .Values.registry }}/quay.io-operator-framework-olm{{ else }}quay.io/operator-framework/olm@sha256:b706ee6583c4c3cf8059d44234c8a4505804adcc742bcddb3d1e2f6eff3d6519{{ end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

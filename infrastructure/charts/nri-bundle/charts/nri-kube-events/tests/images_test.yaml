@@ -5,7 +5,19 @@ release:
   name: my-release
   namespace: my-namespace
 tests:
-  - it: templates image corretly from the new values
+  - it: by default the tag is not nil
+    set:
+      cluster: test-cluster
+      licenseKey: us-whatever
+    asserts:
+      - notMatchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: ".*nil.*"
+      - notMatchRegex:
+          path: spec.template.spec.containers[1].image
+          pattern: ".*nil.*"
+
+  - it: templates image correctly from the new values
     set:
       cluster: test-cluster
       licenseKey: us-whatever
@@ -26,7 +38,7 @@ tests:
           path: spec.template.spec.containers[1].image
           value: areg/arep:atag
 
-  - it: templates image corretly from old values
+  - it: templates image correctly from old values
     set:
       cluster: test-cluster
       licenseKey: us-whatever
@@ -77,7 +89,7 @@ tests:
           path: spec.template.spec.containers[1].image
           value: aold/aold:aold
 
-  - it: pullImagePolicy templates corretly from the new values
+  - it: pullImagePolicy templates correctly from the new values
     set:
       cluster: test-cluster
       licenseKey: us-whatever
@@ -94,7 +106,7 @@ tests:
           path: spec.template.spec.containers[1].imagePullPolicy
           value: new
 
-  - it: pullImagePolicy templates corretly from old values
+  - it: pullImagePolicy templates correctly from old values
     set:
       cluster: test-cluster
       licenseKey: us-whatever

@@ -1,7 +1,5 @@
 # newrelic-infra-operator
 
-![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
-
 A Helm chart to deploy the New Relic Infrastructure Kubernetes Operator.
 
 **Homepage:** <https://hub.docker.com/r/newrelic/newrelic-infra-operator>
@@ -19,7 +17,7 @@ helm upgrade --install newrelic-infra-operator/newrelic-infra-operator -f your-c
 ## Source Code
 
 * <https://github.com/newrelic/newrelic-infra-operator>
-* <https://github.com/newrelic/newrelic-infra-operator/tree/master/charts/newrelic-infra-operator>
+* <https://github.com/newrelic/newrelic-infra-operator/tree/main/charts/newrelic-infra-operator>
 
 ## Usage example
 

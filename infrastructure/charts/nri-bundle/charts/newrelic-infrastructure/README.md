@@ -11,13 +11,13 @@ You can install this chart using [`nri-bundle`](https://github.com/newrelic/helm
 
 ```shell
 helm repo add nri-kubernetes https://newrelic.github.io/nri-kubernetes
-helm upgrade --install nri-kubernetes/newrelic-infrastructure -f your-custom-values.yaml
+helm upgrade --install newrelic-infrastructure nri-kubernetes/newrelic-infrastructure -f your-custom-values.yaml
 ```
 
 ## Source Code
 
 * <https://github.com/newrelic/nri-kubernetes/>
-* <https://github.com/newrelic/nri-kubernetes/tree/master/charts/newrelic-infrastructure>
+* <https://github.com/newrelic/nri-kubernetes/tree/main/charts/newrelic-infrastructure>
 * <https://github.com/newrelic/infrastructure-agent/>
 
 ## Values managed globally

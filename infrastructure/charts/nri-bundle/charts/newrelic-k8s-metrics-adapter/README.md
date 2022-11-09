@@ -9,12 +9,13 @@ A Helm chart to deploy the New Relic Kubernetes Metrics Adapter.
 ## Source Code
 
 * <https://github.com/newrelic/newrelic-k8s-metrics-adapter>
+* <https://github.com/newrelic/newrelic-k8s-metrics-adapter/tree/main/charts/newrelic-k8s-metrics-adapter>
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://helm-charts.newrelic.com | common-library | 1.0.5 |
+| https://helm-charts.newrelic.com | common-library | 1.1.0 |
 
 ## Values
 

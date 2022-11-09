@@ -3,19 +3,23 @@ dependencies:
 - condition: infrastructure.enabled,newrelic-infrastructure.enabled
   name: newrelic-infrastructure
   repository: https://newrelic.github.io/nri-kubernetes
-  version: 3.8.0
+  version: 3.9.0
 - condition: prometheus.enabled,nri-prometheus.enabled
   name: nri-prometheus
   repository: https://newrelic.github.io/nri-prometheus
-  version: 2.1.9
+  version: 2.1.14
+- condition: newrelic-prometheus-agent.enabled
+  name: newrelic-prometheus-agent
+  repository: https://newrelic.github.io/newrelic-prometheus-configurator
+  version: 0.2.0
 - condition: webhook.enabled,nri-metadata-injection.enabled
   name: nri-metadata-injection
   repository: https://newrelic.github.io/k8s-metadata-injection
-  version: 3.0.6
+  version: 3.0.10
 - condition: metrics-adapter.enabled,newrelic-k8s-metrics-adapter.enabled
   name: newrelic-k8s-metrics-adapter
   repository: https://newrelic.github.io/newrelic-k8s-metrics-adapter
-  version: 0.7.7
+  version: 0.7.12
 - condition: ksm.enabled,kube-state-metrics.enabled
   name: kube-state-metrics
   repository: https://kubernetes.github.io/kube-state-metrics
@@ -23,11 +27,11 @@ dependencies:
 - condition: kubeEvents.enabled,nri-kube-events.enabled
   name: nri-kube-events
   repository: https://newrelic.github.io/nri-kube-events
-  version: 2.2.5
+  version: 2.3.0
 - condition: logging.enabled,newrelic-logging.enabled
   name: newrelic-logging
   repository: https://newrelic.github.io/helm-charts
-  version: 1.11.3
+  version: 1.11.10
 - condition: newrelic-pixie.enabled
   name: newrelic-pixie
   repository: https://newrelic.github.io/helm-charts
@@ -36,11 +40,11 @@ dependencies:
   condition: pixie-chart.enabled
   name: pixie-operator-chart
   repository: https://pixie-operator-charts.storage.googleapis.com
-  version: 0.0.30
+  version: 0.0.32
 - condition: newrelic-infra-operator.enabled
   name: newrelic-infra-operator
   repository: https://newrelic.github.io/newrelic-infra-operator
-  version: 1.0.5
+  version: 1.0.10
 description: Groups together the individual charts for the New Relic Kubernetes solution
   for a more comfortable deployment.
 home: https://github.com/newrelic/helm-charts
@@ -72,10 +76,11 @@ sources:
 - https://github.com/newrelic/nri-bundle/tree/master/charts/nri-bundle
 - https://github.com/newrelic/nri-kubernetes/tree/master/charts/newrelic-infrastructure
 - https://github.com/newrelic/nri-prometheus/tree/master/charts/nri-prometheus
+- https://github.com/newrelic/newrelic-prometheus-configurator/tree/master/charts/newrelic-prometheus-agent
 - https://github.com/newrelic/k8s-metadata-injection/tree/master/charts/nri-metadata-injection
 - https://github.com/newrelic/newrelic-k8s-metrics-adapter/tree/master/charts/newrelic-k8s-metrics-adapter
 - https://github.com/newrelic/nri-kube-events/tree/master/charts/nri-kube-events
 - https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-logging
 - https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-pixie
 - https://github.com/newrelic/newrelic-infra-operator/tree/master/charts/newrelic-infra-operator
-version: 4.8.2
+version: 4.9.3

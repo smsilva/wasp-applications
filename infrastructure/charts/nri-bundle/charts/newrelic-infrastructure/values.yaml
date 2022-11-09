@@ -21,24 +21,24 @@ images:
   # -- Image for the New Relic Infrastructure Agent sidecar.
   # @default -- See `values.yaml`
   forwarder:
-    pullPolicy: IfNotPresent
-    tag: 1.28.0
-    repository: newrelic/k8s-events-forwarder
     registry: ""
+    repository: newrelic/k8s-events-forwarder
+    tag: 1.33.1
+    pullPolicy: IfNotPresent
   # -- Image for the New Relic Infrastructure Agent plus integrations.
   # @default -- See `values.yaml`
   agent:
-    pullPolicy: IfNotPresent
-    tag: 2.8.22
-    repository: newrelic/infrastructure-bundle
     registry: ""
+    repository: newrelic/infrastructure-bundle
+    tag: 2.8.33
+    pullPolicy: IfNotPresent
   # -- Image for the New Relic Kubernetes integration.
   # @default -- See `values.yaml`
   integration:
-    pullPolicy: IfNotPresent
-    tag: 3.4.1
-    repository: newrelic/nri-kubernetes
     registry: ""
+    repository: newrelic/nri-kubernetes
+    tag:
+    pullPolicy: IfNotPresent
 
 # -- Config that applies to all instances of the solution: kubelet, ksm, control plane and sidecars.
 # @default -- See `values.yaml`
@@ -476,7 +476,8 @@ customAttributes: {}
 # -- Settings controlling ServiceAccount creation.
 # @default -- See `values.yaml`
 serviceAccount:
-  # -- Whether the chart should automatically create the ServiceAccount objects required to run.
+  # -- (bool) Whether the chart should automatically create the ServiceAccount objects required to run.
+  # @default -- `true`
   create:
   annotations: {}
   # If not set and create is true, a name is generated using the fullname template
@@ -491,7 +492,7 @@ podLabels: {}
 
 # -- Run the integration with full access to the host filesystem and network.
 # Running in this mode allows reporting fine-grained cpu, memory, process and network metrics for your nodes.
-privileged: false
+privileged: true
 # -- Sets pod's priorityClassName. Can be configured also with `global.priorityClassName`
 priorityClassName: ""
 # -- (bool) Sets pod's hostNetwork. Can be configured also with `global.hostNetwork`
@@ -566,7 +567,7 @@ selfMonitoring:
     # selfMonitoring.pixie.enabled -- Enables the Pixie Health Check nri-flex config.
     # This Flex config performs periodic checks of the Pixie /healthz and /statusz endpoints exposed by the Pixie
     # Cloud Connector. A status for each endpoint is sent to New Relic in a pixieHealthCheck event.
-    enabled: true
+    enabled: false
 
 
 # -- Configures the integration to send all HTTP/HTTPS request through the proxy in that URL. The URL should have a standard format like `https://user:password@hostname:port`. Can be configured also with `global.proxy`
