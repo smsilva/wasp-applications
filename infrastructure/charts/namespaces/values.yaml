@@ -6,3 +6,6 @@ namespaces:
     istio: true
 
   - name: newrelic
+
+  - name: istio-ingress
+    istio: true
