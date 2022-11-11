@@ -26,7 +26,7 @@ nri-kube-events:
 
 newrelic-logging:
   # newrelic-logging.enabled -- Install the [`newrelic-logging` chart](https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-logging)
-  enabled: false
+  enabled: true
 
 newrelic-pixie:
   # newrelic-pixie.enabled -- Install the [`newrelic-pixie`](https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-pixie)
