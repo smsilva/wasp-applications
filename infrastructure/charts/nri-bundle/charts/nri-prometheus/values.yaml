@@ -170,11 +170,11 @@ config:
   #   - 95
   #   - 99
 
-  transformations:
-    - description: "Only Istio Metrics"
-      ignore_metrics:
-        - except:
-          - istio_
+  transformations: []
+    # - description: "Only Istio Metrics"
+    #   ignore_metrics:
+    #     - except:
+    #       - istio_
 
   # - description: "Custom transformation Example"
   #   rename_attributes:
