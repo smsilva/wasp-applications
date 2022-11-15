@@ -1,0 +1,27 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: httpbin
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingress
+
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "echo.sandbox.wasp.silvios.me"
+
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: tls-wildcard-full-chain
+      hosts:
+        - "echo.sandbox.wasp.silvios.me"

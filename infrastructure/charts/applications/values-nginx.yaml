@@ -17,3 +17,7 @@ applications:
   - name: istio-discovery
     namespace: istio-system
     wave: 30
+
+  - name: istio-example
+    namespace: example
+    wave: 40
