@@ -1,7 +1,7 @@
 annotations:
   configuratorVersion: 0.2.0
 apiVersion: v2
-appVersion: v2.37.1
+appVersion: v2.37.2
 dependencies:
 - name: common-library
   repository: https://helm-charts.newrelic.com
@@ -29,4 +29,4 @@ maintainers:
   url: https://github.com/roobre
 name: newrelic-prometheus-agent
 type: application
-version: 0.2.0
+version: 0.3.1

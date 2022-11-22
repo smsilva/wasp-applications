@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v0.3.1 - 2022-11-08
+
+### 🚀 Enhancements
+- the chart is now applying by default a series of relabel configs to fix metric types for Cockroach db service.
+- the chart is now scraping by default Cockroach db service as well.
+
+### 🐞 Bug fixes
+- updated appVersion of `quay.io/prometheus/prometheus` from v2.37.1 to v2.37.2
+
+## v0.2.1 - 2022-11-03
+
+### 🐞 Bug fixes
+- `imagePullPolicy` is now correctly applied to the init container as well.
+
 ## v0.2.0 - 2022-11-03
 
 ### Note, defaults of the chart changed
