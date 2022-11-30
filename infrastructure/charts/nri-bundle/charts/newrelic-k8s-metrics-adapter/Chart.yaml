@@ -24,4 +24,4 @@ name: newrelic-k8s-metrics-adapter
 sources:
 - https://github.com/newrelic/newrelic-k8s-metrics-adapter
 - https://github.com/newrelic/newrelic-k8s-metrics-adapter/tree/main/charts/newrelic-k8s-metrics-adapter
-version: 0.7.12
+version: 1.0.0

@@ -3,7 +3,7 @@ dependencies:
 - condition: infrastructure.enabled,newrelic-infrastructure.enabled
   name: newrelic-infrastructure
   repository: https://newrelic.github.io/nri-kubernetes
-  version: 3.9.0
+  version: 3.10.0
 - condition: prometheus.enabled,nri-prometheus.enabled
   name: nri-prometheus
   repository: https://newrelic.github.io/nri-prometheus
@@ -11,19 +11,19 @@ dependencies:
 - condition: newrelic-prometheus-agent.enabled
   name: newrelic-prometheus-agent
   repository: https://newrelic.github.io/newrelic-prometheus-configurator
-  version: 0.3.1
+  version: 1.0.1
 - condition: webhook.enabled,nri-metadata-injection.enabled
   name: nri-metadata-injection
   repository: https://newrelic.github.io/k8s-metadata-injection
-  version: 3.0.10
+  version: 4.0.0
 - condition: metrics-adapter.enabled,newrelic-k8s-metrics-adapter.enabled
   name: newrelic-k8s-metrics-adapter
   repository: https://newrelic.github.io/newrelic-k8s-metrics-adapter
-  version: 0.7.12
+  version: 1.0.0
 - condition: ksm.enabled,kube-state-metrics.enabled
   name: kube-state-metrics
-  repository: https://kubernetes.github.io/kube-state-metrics
-  version: 2.13.3
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 4.23.0
 - condition: kubeEvents.enabled,nri-kube-events.enabled
   name: nri-kube-events
   repository: https://newrelic.github.io/nri-kube-events
@@ -31,7 +31,7 @@ dependencies:
 - condition: logging.enabled,newrelic-logging.enabled
   name: newrelic-logging
   repository: https://newrelic.github.io/helm-charts
-  version: 1.11.10
+  version: 1.12.0
 - condition: newrelic-pixie.enabled
   name: newrelic-pixie
   repository: https://newrelic.github.io/helm-charts
@@ -40,11 +40,11 @@ dependencies:
   condition: pixie-chart.enabled
   name: pixie-operator-chart
   repository: https://pixie-operator-charts.storage.googleapis.com
-  version: 0.0.32
+  version: 0.0.34
 - condition: newrelic-infra-operator.enabled
   name: newrelic-infra-operator
   repository: https://newrelic.github.io/newrelic-infra-operator
-  version: 1.0.11
+  version: 2.0.0
 description: Groups together the individual charts for the New Relic Kubernetes solution
   for a more comfortable deployment.
 home: https://github.com/newrelic/helm-charts
@@ -83,4 +83,4 @@ sources:
 - https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-logging
 - https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-pixie
 - https://github.com/newrelic/newrelic-infra-operator/tree/master/charts/newrelic-infra-operator
-version: 4.9.4
+version: 5.0.0
