@@ -170,13 +170,7 @@ config:
   #   - 95
   #   - 99
 
-  transformations:
-    - description: "Only Selected Metrics"
-      ignore_metrics:
-        - except:
-          - argocd_
-          - istio_
-
+  transformations: []
   # - description: "Custom transformation Example"
   #   rename_attributes:
   #     - metric_prefix: ""
