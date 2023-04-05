@@ -1,0 +1,20 @@
+message: |
+  \[*{{.app.metadata.name}}*] *SYNC* was *UNKNOWN*.
+googlechat:
+  cards: |
+    - header:
+        title: ArgoCD Bot Notification
+      sections:
+        - widgets:
+            - textParagraph:
+                text: The app {{ .app.metadata.name }} last SYNC was UNKNOWN.
+        - widgets:
+            - keyValue:
+                topLabel: Repository
+                content: {{ call .repo.RepoURLToHTTPS .app.spec.source.repoURL }}
+            - keyValue:
+                topLabel: Revision
+                content: {{ .app.spec.source.targetRevision }}
+            - keyValue:
+                topLabel: Author
+                content: {{ (call .repo.GetCommitMetadata .app.status.sync.revision).Author }}

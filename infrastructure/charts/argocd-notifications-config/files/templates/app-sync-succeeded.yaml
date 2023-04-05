@@ -1,0 +1,21 @@
+message: |
+  \[*{{.app.metadata.name}}*] *SYNC* was *SUCCEEDED*.
+googlechat:
+  cards: |
+    - header:
+        title: ArgoCD Bot Notification
+      sections:
+        - widgets:
+            - textParagraph:
+                text: The app {{ .app.metadata.name }} has succesfully SYNCED.
+        - widgets:
+            - keyValue:
+                topLabel: Repository
+                content: {{ call .repo.RepoURLToHTTPS .app.spec.source.repoURL }}
+            - keyValue:
+                topLabel: Revision
+                content: {{ .app.spec.source.targetRevision }}
+            - keyValue:
+                topLabel: Author
+                content: {{ (call .repo.GetCommitMetadata .app.status.sync.revision).Author }}
+

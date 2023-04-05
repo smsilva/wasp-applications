@@ -1,0 +1,20 @@
+message: |
+  \[*{{.app.metadata.name}}*] *HEALTH* is *DEGRADED*.
+googlechat:
+  cards: |
+    - header:
+        title: ArgoCD Bot Notification
+      sections:
+        - widgets:
+            - textParagraph:
+                text: The app {{ .app.metadata.name }} HEALTH status is DEGRADED.
+        - widgets:
+            - keyValue:
+                topLabel: Repository
+                content: {{ call .repo.RepoURLToHTTPS .app.spec.source.repoURL }}
+            - keyValue:
+                topLabel: Revision
+                content: {{ .app.spec.source.targetRevision }}
+            - keyValue:
+                topLabel: Author
+                content: {{ (call .repo.GetCommitMetadata .app.status.sync.revision).Author }}

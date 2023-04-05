@@ -1,0 +1,25 @@
+argocdUrl: https://localhost:32080
+
+services:
+  googlechat:
+    webhooks:
+      operations: $google-chat-webhook-url-operations
+      sre: $google-chat-webhook-url-sre
+
+  telegram:
+    token: $telegram-token
+
+subscriptions:
+  - recipients:
+      - telegram:silviosargocd
+    triggers:
+      - on-deployed
+      - on-sync-succeeded
+
+  - recipients:
+      - telegram:silviosargocd
+    triggers:
+      - on-deployed
+      - on-health-degraded
+      - on-sync-failed
+      - on-sync-status-unknown

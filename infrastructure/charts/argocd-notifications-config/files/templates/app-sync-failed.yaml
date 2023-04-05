@@ -1,0 +1,26 @@
+message: |
+  \[*{{.app.metadata.name}}*] *SYNC* is *FAILED*.
+googlechat:
+  cards: |
+    - header:
+        title: ArgoCD Bot Notification
+      sections:
+        - widgets:
+            - textParagraph:
+                text: The app {{ .app.metadata.name }} last SYNC is FAILED.
+        - widgets:
+            - keyValue:
+                topLabel: Repository
+                content: {{ call .repo.RepoURLToHTTPS .app.spec.source.repoURL }}
+            - keyValue:
+                topLabel: Revision
+                content: {{ .app.spec.source.targetRevision }}
+            - keyValue:
+                topLabel: Author
+                content: {{ (call .repo.GetCommitMetadata .app.status.sync.revision).Author }}
+            - keyValue:
+                topLabel: Sync Status
+                content: {{ .app.status.sync.status }}
+            - keyValue:
+                topLabel: Operation State Phase
+                content: {{ .app.status.operationState.phase }}
