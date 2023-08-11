@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-for-external-dns-config
+  name: ingress
   annotations:
     external-dns.alpha.kubernetes.io/target: gateway.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
 spec:
