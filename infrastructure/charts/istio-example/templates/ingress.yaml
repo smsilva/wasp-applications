@@ -12,10 +12,10 @@ spec:
     - host: echo.{{ .Values.global.environment.id }}.{{ .Values.global.environment.domain }}
       http:
         paths:
-          - path: /.well-known/not-used-path/just-for-external-dns-entries
+          - path: /
             pathType: Prefix
             backend:
               service: 
-                name: non-existent-service
+                name: httpbin
                 port:
-                  number: 80
+                  number: 8000
