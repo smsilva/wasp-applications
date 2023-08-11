@@ -1,0 +1,12 @@
+global:
+  cluster: wasp-sandbox-5o4vg
+  environment:
+    cluster:
+      certificates:
+        server: staging
+        type: letsencrypt
+      ingress:
+        type: nginx
+      name: wasp-sandbox-5o4vg
+    domain: sandbox.wasp.silvios.me
+    id: 5o4vg
