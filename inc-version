@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Check if the number of arguments is correct
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <CURRENT_VERSION> <VERSION_PART>"
+  exit 1
+fi
+
+CURRENT_VERSION=$1
+VERSION_PART=$2
+
+MAJOR_NUMBER=$(echo $CURRENT_VERSION | awk -F'.' '{print $1}')
+MINOR_NUMBER=$(echo $CURRENT_VERSION | awk -F'.' '{print $2}')
+PATCH_NUMBER=$(echo $CURRENT_VERSION | awk -F'.' '{print $3}')
+
+if [[ ${VERSION_PART?} -eq 1 ]]; then
+  MAJOR_NUMBER=$((MAJOR_NUMBER + 1))
+fi
+
+if [[ ${VERSION_PART?} -eq 2 ]]; then
+  MINOR_NUMBER=$((MINOR_NUMBER + 1))
+fi
+
+if [[ ${VERSION_PART?} -eq 3 ]]; then
+  PATCH_NUMBER=$((PATCH_NUMBER + 1))
+fi
+
+NEW_VERSION="$MAJOR_NUMBER.$MINOR_NUMBER.$PATCH_NUMBER"
+
+echo $NEW_VERSION

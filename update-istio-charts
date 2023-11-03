@@ -1,0 +1,34 @@
+#!/bin/bash
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+
+helm repo update
+
+rm -rf infrastructure/charts/istio-base/charts/*
+rm -rf infrastructure/charts/istio-discovery/charts/*
+rm -rf infrastructure/charts/istio-gateway/charts/*
+
+export ISTIO_VERSION=$(helm search repo istio/base \
+| awk '{ print $3 }' \
+| sed '1d')
+
+helm fetch istio/base \
+  --version ${ISTIO_VERSION?} \
+  --destination infrastructure/charts/istio-base/charts/
+
+helm fetch istio/istiod \
+  --version ${ISTIO_VERSION?} \
+  --destination infrastructure/charts/istio-discovery/charts/
+
+helm fetch istio/gateway \
+  --version ${ISTIO_VERSION?} \
+  --destination infrastructure/charts/istio-gateway/charts/
+
+find . -name "Chart.yaml" \
+| egrep "(istio\-*)(base.*|gateway.*|discovery.*)" \
+| xargs --max-args 1 \
+| while read -r FILE_NAME; do
+    CURRENT_CHART_VERSION=$(grep "^version" ${FILE_NAME?} | awk '{ print $2 }')
+    NEW_CHART_VERSION=$(./inc-version ${CURRENT_CHART_VERSION?} 3)
+    sed --in-place "s|^version.*|version: ${NEW_CHART_VERSION}|g" "${FILE_NAME?}"
+    sed --in-place "s|^appVersion.*|appVersion: ${ISTIO_VERSION}|g" "${FILE_NAME?}"
+done
