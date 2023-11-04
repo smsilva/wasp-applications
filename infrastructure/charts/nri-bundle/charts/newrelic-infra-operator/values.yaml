@@ -26,7 +26,7 @@ image:
 # @default -- See `values.yaml`
 admissionWebhooksPatchJob:
   image:
-    registry:  # Defaults to k8s.gcr.io
+    registry:  # Defaults to registry.k8s.io
     repository: ingress-nginx/kube-webhook-certgen
     tag: v1.3.0
     pullPolicy: IfNotPresent
@@ -100,7 +100,7 @@ certManager:
 
 # -- Webhook timeout
 # Ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#timeouts
-timeoutSeconds: 28
+timeoutSeconds: 10
 
 # -- Operator configuration
 # @default -- See `values.yaml`
@@ -140,7 +140,7 @@ config:
       # @default -- See `values.yaml`
       image:
         repository: newrelic/infrastructure-k8s
-        tag: 2.13.5-unprivileged
+        tag: 2.13.11-unprivileged
         pullPolicy: IfNotPresent
 
       # -- configSelectors is the way to configure resource requirements and extra envVars of the injected sidecar container.

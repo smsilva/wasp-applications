@@ -38,15 +38,25 @@ spec:
     spec:
       serviceAccountName: {{ include "newrelic.common.serviceAccount.name" $ }}
       hostNetwork: false
+      {{- with include "newrelic.common.dnsConfig" $ }}
+      dnsConfig:
+        {{- . | nindent 8 }}
+      {{- end }}
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 10
-      {{- if $.Values.image.pullSecrets }}
+      {{- with include "newrelic.common.images.renderPullSecrets" ( dict "pullSecrets" (list $.Values.image.pullSecrets) "context" $) }}
       imagePullSecrets:
-{{ toYaml $.Values.image.pullSecrets | indent 8 }}
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- if $.Values.windows.initContainers }}
+      initContainers:
+{{ toYaml $.Values.windows.initContainers | indent 8 }}
       {{- end }}
       containers:
         - name: {{ template "newrelic-logging.name" $ }}
-          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion  }}-{{ .imageTagSuffix }}"
+          # We have to use 'replace' to remove the double-quotes that "newrelic.common.images.image" has, so that
+          # we can append the Windows image tag suffix (and then re-quote that value)
+          image: "{{ include "newrelic.common.images.image" ( dict "imageRoot" $.Values.image "context" $) | replace "\"" ""}}-{{ .imageTagSuffix }}"
           imagePullPolicy: "{{ $.Values.image.pullPolicy }}"
           securityContext: {}
           env:
@@ -78,9 +88,9 @@ spec:
               value: {{ $.Values.fluentBit.logLevel | quote }}
             - name: LOG_PARSER
               {{- if $.Values.fluentBit.criEnabled }}
-              value: "cri"
+              value: "cri,docker"
               {{- else }}
-              value: "docker"
+              value: "docker,cri"
               {{- end }}
             - name: FB_DB
               value: {{ $.Values.fluentBit.windowsDb | quote }}
@@ -142,6 +152,6 @@ spec:
       tolerations:
 {{ toYaml $.Values.tolerations | indent 8 }}
       {{- end }}
-{{- end }}
 ---
+{{- end }}
 {{- end }}

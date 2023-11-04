@@ -15,7 +15,7 @@ A Helm chart to deploy the New Relic Kubernetes Metrics Adapter.
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://helm-charts.newrelic.com | common-library | 1.1.0 |
+| https://helm-charts.newrelic.com | common-library | 1.1.1 |
 
 ## Values
 
@@ -29,6 +29,7 @@ A Helm chart to deploy the New Relic Kubernetes Metrics Adapter.
 | config.accountID | string | `nil` | New Relic [Account ID](https://docs.newrelic.com/docs/accounts/accounts-billing/account-structure/account-id/) where the configured metrics are sourced from. (**Required**) |
 | config.cacheTTLSeconds | int | `30` | Period of time in seconds in which a cached value of a metric is consider valid. |
 | config.externalMetrics | string | See `values.yaml` | Contains all the external metrics definition of the adapter. Each key of the externalMetric entry represents the metric name and contains the parameters that defines it. |
+| config.nrdbClientTimeoutSeconds | int | 30 | Defines the NRDB client timeout. The maximum allowed value is 120. |
 | config.region | string | Automatically detected from `licenseKey`. | New Relic account region. If not set, it will be automatically derived from the License Key. |
 | containerSecurityContext | string | `nil` | Configure containerSecurityContext |
 | extraEnv | list | `[]` | Array to add extra environment variables |
@@ -70,7 +71,7 @@ config:
 Then, to install this chart, run the following command:
 
 ```sh
-helm upgrade --install [release-name] newrelic/newrelic-k8s-metrics-adapter --values [values file path]
+helm upgrade --install [release-name] newrelic-k8s-metrics-adapter/newrelic-k8s-metrics-adapter --values [values file path]
 ```
 
 Once deployed the metric `nginx_average_requests` will be available to use by any HPA. This is and example of an HPA yaml using this metric:
@@ -133,11 +134,5 @@ resources:
 
 ## Maintainers
 
-* alvarocabanas
-* carlossscastro
-* gsanchezgavier
-* kang-makes
-* marcsanmi
-* paologallinaharbur
-* roobre
-* sigilioso
+* [juanjjaramillo](https://github.com/juanjjaramillo)
+* [svetlanabrennan](https://github.com/svetlanabrennan)

@@ -56,6 +56,9 @@ spec:
             {{- if include "newrelic.common.verboseLog" . }}
             - --verbose=true
             {{- end }}
+          {{- with .Values.resources.configurator }}
+          resources: {{ toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: configurator-config
               mountPath: /etc/configurator/
@@ -71,6 +74,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "newrelic.common.license.secretName" . }}
                   key: {{ include "newrelic.common.license.secretKeyName" . }}
+            - name: NR_PROM_CHART_VERSION
+              value: {{ .Chart.Version }}
 
       containers:
         - name: prometheus

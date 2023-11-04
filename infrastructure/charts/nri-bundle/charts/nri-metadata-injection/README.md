@@ -33,6 +33,8 @@ Options that can be defined globally include `affinity`, `nodeSelector`, `tolera
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Sets pod/node affinities. Can be configured also with `global.affinity` |
 | certManager.enabled | bool | `false` | Use cert manager for webhook certs |
+| certManager.rootCertificateDuration | string | `"43800h"` | Sets the root certificate duration. Defaults to 43800h (5 years). |
+| certManager.webhookCertificateDuration | string | `"8760h"` | Sets certificate duration. Defaults to 8760h (1 year). |
 | cluster | string | `""` | Name of the Kubernetes cluster monitored. Can be configured also with `global.cluster` |
 | containerSecurityContext | object | `{}` | Sets security context (at container level). Can be configured also with `global.containerSecurityContext` |
 | customTLSCertificate | bool | `false` | Use custom tls certificates for the webhook, or let the chart handle it automatically. Ref: https://docs.newrelic.com/docs/integrations/kubernetes-integration/link-your-applications/link-your-applications-kubernetes#configure-injection |
@@ -61,11 +63,6 @@ Options that can be defined globally include `affinity`, `nodeSelector`, `tolera
 
 ## Maintainers
 
-* [alvarocabanas](https://github.com/alvarocabanas)
-* [carlossscastro](https://github.com/carlossscastro)
-* [gsanchezgavier](https://github.com/gsanchezgavier)
-* [kang-makes](https://github.com/kang-makes)
-* [marcsanmi](https://github.com/marcsanmi)
-* [paologallinaharbur](https://github.com/paologallinaharbur)
-* [roobre](https://github.com/roobre)
-* [sigilioso](https://github.com/sigilioso)
+* [juanjjaramillo](https://github.com/juanjjaramillo)
+* [svetlanabrennan](https://github.com/svetlanabrennan)
+* [xqi-nr](https://github.com/xqi-nr)

@@ -1,7 +1,7 @@
 #!/bin/bash
 helm repo add istio https://istio-release.storage.googleapis.com/charts
 
-helm repo update
+helm repo update istio
 
 rm -rf infrastructure/charts/istio-base/charts/*
 rm -rf infrastructure/charts/istio-discovery/charts/*

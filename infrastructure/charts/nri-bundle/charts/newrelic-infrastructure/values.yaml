@@ -23,14 +23,14 @@ images:
   forwarder:
     registry: ""
     repository: newrelic/k8s-events-forwarder
-    tag: 1.36.1
+    tag: 1.47.0
     pullPolicy: IfNotPresent
   # -- Image for the New Relic Infrastructure Agent plus integrations.
   # @default -- See `values.yaml`
   agent:
     registry: ""
     repository: newrelic/infrastructure-bundle
-    tag: 2.8.38
+    tag: 3.2.16
     pullPolicy: IfNotPresent
   # -- Image for the New Relic Kubernetes integration.
   # @default -- See `values.yaml`
@@ -57,7 +57,7 @@ common:
     # Otherwise you can build more complex filters and include or exclude certain namespaces by adding one or multiple
     # expressions that are added, for instance:
     # matchExpressions:
-    #   - {key: newrelic.com/scrape, operator: NotIn, values: [false]}
+    #   - {key: newrelic.com/scrape, operator: NotIn, values: ["false"]}
 
   # -- Config for the Infrastructure agent.
   # Will be used by the forwarder sidecars and the agent running integrations.
@@ -68,6 +68,14 @@ common:
 # Non-nil values of `common.config.interval` will override this value.
 # @default -- `false` (See [Low data mode](README.md#low-data-mode))
 lowDataMode:
+
+# sink - Configuration for the scraper sink.
+sink:
+  http:
+    # -- The amount of time the scraper container to probe infra agent sidecar container before giving up and restarting during pod starts.
+    probeTimeout: 90s
+    # -- The amount of time the scraper container to backoff when it fails to probe infra agent sidecar.
+    probeBackoff: 5s
 
 # kubelet -- Configuration for the DaemonSet that collects metrics from the Kubelet.
 # @default -- See `values.yaml`
@@ -118,6 +126,8 @@ kubelet:
     timeout: 10s
     # -- Number of retries after timeout expired
     retries: 3
+    # -- Max number of scraper rerun when scraper runtime error happens
+    scraperMaxReruns: 4
   # port:
   # scheme:
 
@@ -164,7 +174,7 @@ ksm:
   # @default -- 100m/150M -/850M
   resources:
     limits:
-      memory: 2G  # Bump me up if KSM pod shows restarts.
+      memory: 850M  # Bump me up if KSM pod shows restarts.
     requests:
       cpu: 100m
       memory: 150M
@@ -556,7 +566,7 @@ integrations: {}
 # -- (bool) Collect detailed metrics from processes running in the host.
 # This defaults to true for accounts created before July 20, 2020.
 # ref: https://docs.newrelic.com/docs/release-notes/infrastructure-release-notes/infrastructure-agent-release-notes/new-relic-infrastructure-agent-1120
-# @default -- `true`
+# @default -- `false`
 enableProcessMetrics:
 
 # Prefix nodes display name with cluster to reduce chances of collisions

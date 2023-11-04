@@ -6,6 +6,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v1.3.0 - 2023-09-15
+
+### ⛓️ Dependencies
+- Updated newrelic/newrelic-prometheus-configurator to v1.6.0 - [Changelog 🔗](https://github.com/newrelic/newrelic-prometheus-configurator/releases/tag/1.6.0)
+
+## v1.2.3 - 2023-08-22
+
+### ⛓️ Dependencies
+- Updated newrelic/newrelic-prometheus-configurator to v1.5.0 - [Changelog 🔗](https://github.com/newrelic/newrelic-prometheus-configurator/releases/tag/1.5.0)
+
+## v1.2.2 - 2023-06-15
+
+### ⛓️ Dependencies
+- Updated newrelic/newrelic-prometheus-configurator to v1.4.2 - [Changelog 🔗](https://github.com/newrelic/newrelic-prometheus-configurator/releases/tag/1.4.2)
+
+## v1.2.1 - 2023-06-06
+
+### ⛓️ Dependencies
+- Updated newrelic/newrelic-prometheus-configurator to v1.4.1 - [Changelog 🔗](https://github.com/newrelic/newrelic-prometheus-configurator/releases/tag/1.4.1)
+
+## v1.2.0 - 2023-05-12
+
+### ⛓️ Dependencies
+- Updated newrelic/newrelic-prometheus-configurator to v1.4.0 - [Changelog 🔗](https://github.com/newrelic/newrelic-prometheus-configurator/releases/tag/1.4.0)
+
+## v1.1.1 - 2023-03-20
+
+### ⛓️ Dependencies
+- Updated common-library to v1.1.1 - [Changelog 🔗](https://github.com/newrelic/helm-charts/releases/tag/common-library-1.1.1)
+
+## v1.1.0 - 2023-01-30
+
+### 🚀 Enhancements
+- Set `NR_PROM_CHART_VERSION` env var in the configurator statefulset init container.
+
+### ⛓️ Dependencies
+- Upgraded github.com/prometheus/prometheus from 0.37.3 to 0.37.5 - [Changelog 🔗](https://github.com/prometheus/prometheus/releases/tag/0.37.5)
+
 ## v1.0.1 - 2022-11-30
 
 ### 🐞 Bug fixes

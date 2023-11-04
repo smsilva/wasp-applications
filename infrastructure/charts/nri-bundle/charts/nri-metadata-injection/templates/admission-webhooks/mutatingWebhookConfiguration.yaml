@@ -25,6 +25,7 @@ webhooks:
     apiVersions: ["v1"]
     resources: ["pods"]
 {{- if .Values.injectOnlyLabeledNamespaces }}
+    scope: Namespaced
   namespaceSelector:
     matchLabels:
       newrelic-metadata-injection: enabled
@@ -32,6 +33,4 @@ webhooks:
   failurePolicy: Ignore
   timeoutSeconds: {{ .Values.timeoutSeconds }}
   sideEffects: None
-  admissionReviewVersions:
-  - v1beta1
-  - v1
+  admissionReviewVersions: ["v1", "v1beta1"]

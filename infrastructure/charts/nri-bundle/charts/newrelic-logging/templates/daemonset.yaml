@@ -34,15 +34,23 @@ spec:
     spec:
       serviceAccountName: {{ include "newrelic.common.serviceAccount.name" . }}
       hostNetwork: true # This option is a requirement for the Infrastructure Agent to report the proper hostname in New Relic.
+      {{- with include "newrelic.common.dnsConfig" . }}
+      dnsConfig:
+        {{- . | nindent 8 }}
+      {{- end }}
       dnsPolicy: ClusterFirstWithHostNet
       terminationGracePeriodSeconds: 10
-      {{- if .Values.image.pullSecrets }}
+      {{- with include "newrelic.common.images.renderPullSecrets" ( dict "pullSecrets" (list .Values.image.pullSecrets) "context" .) }}
       imagePullSecrets:
-{{ toYaml .Values.image.pullSecrets | indent 8 }}
+        {{- . | nindent 8 }}
       {{- end }}
       {{- with include "newrelic.common.securityContext.pod" . }}
       securityContext:
         {{- . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+{{ toYaml .Values.initContainers | indent 8 }}
       {{- end }}
       containers:
         - name: {{ template "newrelic-logging.name" . }}
@@ -50,7 +58,7 @@ spec:
           securityContext:
             {{- . | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: {{ include "newrelic.common.images.image" ( dict "imageRoot" .Values.image "context" .) }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           env:
             - name: ENDPOINT
@@ -81,9 +89,9 @@ spec:
               value: {{ .Values.fluentBit.logLevel | quote }}
             - name: LOG_PARSER
               {{- if .Values.fluentBit.criEnabled }}
-              value: "cri"
+              value: "cri,docker"
               {{- else }}
-              value: "docker"
+              value: "docker,cri"
               {{- end }}
             - name: FB_DB
               value: {{ .Values.fluentBit.db | quote }}

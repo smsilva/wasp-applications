@@ -62,7 +62,7 @@ fluentBit:
           Name              tail
           Tag               kube.*
           Path              ${PATH}
-          Parser            ${LOG_PARSER}
+          multiline.parser  ${LOG_PARSER}
           DB                ${FB_DB}
           Mem_Buf_Limit     7MB
           Skip_Long_Lines   On
@@ -72,7 +72,6 @@ fluentBit:
 #      [INPUT]
 #          Name   dummy
 #          Tag    dummy.log
-
 
     filters: |
       [FILTER]
@@ -138,28 +137,22 @@ fluentBit:
 #          Name null
 #          Match *
 
-    parsers: |
-      [PARSER]
-          Name         docker
-          Format       json
-          Time_Key     time
-          Time_Format  %Y-%m-%dT%H:%M:%S.%L
-          Time_Keep    On
-
-      [PARSER]
-          Name cri
-          Format regex
-          Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
-          Time_Key    time
-          Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+#    parsers: |
+#      [PARSER]
+#          Name         my_custom_parser
+#          Format       json
+#          Time_Key     time
+#          Time_Format  %Y-%m-%dT%H:%M:%S.%L
+#          Time_Keep    On
 
 image:
   repository: newrelic/newrelic-fluentbit-output
+#  registry: my_registry
   tag: ""
   pullPolicy: IfNotPresent
   ## See https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  # pullSecrets:
-    # - name: regsecret
+  pullSecrets: []
+#    - name: regsecret
 
 # By default, the Linux DaemonSet will always be deployed, while the Windows DaemonSet(s) won't.
 enableLinux: true
@@ -169,14 +162,16 @@ enableWindows: false
 # Windows containers can only be executed on hosts running the exact same Windows version and build number,
 # because Kubernetes only supports process isolation and not Hyper-V isolation (as of September 2021)
 windowsOsList:
-  # Right now, the windows-2019 worker offerred by GitHub is based on ltsc2019/10.0.17763.2183,
-  # so it can only compile containers running this specific version and compilation number of the OS.
-  # We aim to support (but right now, we can only support LTSC2019 using GitHub actions):
+  # We aim to support (limited to LTSC2019/LTSC2022 using GitHub actions, see https://github.com/actions/runner-images/tree/main/images/win):
   # https://kubernetes.io/docs/setup/production-environment/windows/intro-windows-in-kubernetes/#windows-os-version-support
   - version: ltsc2019
     imageTagSuffix: windows-ltsc-2019
     buildNumber: 10.0.17763
+  - version: ltsc2022
+    imageTagSuffix: windows-ltsc-2022
+    buildNumber: 10.0.20348
 
+# Default set of resources assigned to the DaemonSet pods
 resources:
   limits:
     cpu: 500m
@@ -241,8 +236,7 @@ nodeSelector: {}
 # Windows containers can only be executed on hosts running the exact same Windows version and build number.
 windowsNodeSelector: {}
 
-# These are default tolerations to be able to run the New Relic Kubernetes
-# integration.
+# These are default tolerations to be able to run the New Relic Kubernetes integration.
 tolerations:
   - operator: "Exists"
     effect: "NoSchedule"
@@ -276,3 +270,17 @@ extraVolumes: []
 extraVolumeMounts: []
 # - name: systemdlog
 #   mountPath: /run/log/journal
+
+initContainers:
+#  - name: init
+#    image: busybox
+#    command: ["sh", "-c", 'echo "hello world"']
+
+windows:
+  initContainers:
+#    - name: init
+#       image: ...
+#       command: [...]
+
+# -- Sets pod dnsConfig. Can also be configured with `global.dnsConfig`
+dnsConfig: {}
