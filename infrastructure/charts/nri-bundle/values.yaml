@@ -15,7 +15,7 @@ kube-state-metrics:
   # This is mandatory if `infrastructure.enabled` is set to `true` and the user does not provide its own instance of KSM version >=1.8 and <=2.0. Note, kube-state-metrics v2+ disables labels/annotations
   # metrics by default. You can enable the target labels/annotations metrics to be monitored by using the metricLabelsAllowlist/metricAnnotationsAllowList options described [here](https://github.com/prometheus-community/helm-charts/blob/159cd8e4fb89b8b107dcc100287504bb91bf30e0/charts/kube-state-metrics/values.yaml#L274) in
   # your Kubernetes clusters.
-  enabled: true
+  enabled: false
 
 nri-kube-events:
   # nri-kube-events.enabled -- Install the [`nri-kube-events` chart](https://github.com/newrelic/nri-kube-events/tree/main/charts/nri-kube-events)
@@ -23,7 +23,7 @@ nri-kube-events:
 
 newrelic-logging:
   # newrelic-logging.enabled -- Install the [`newrelic-logging` chart](https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-logging)
-  enabled: true
+  enabled: false
 
 newrelic-pixie:
   # newrelic-pixie.enabled -- Install the [`newrelic-pixie`](https://github.com/newrelic/helm-charts/tree/master/charts/newrelic-pixie)
@@ -58,9 +58,9 @@ global:
   # -- The license key for your New Relic Account. This will be preferred configuration option if both `insightsKey` and `customSecret` are specified.
   insightsKey: ""
   # -- Name of the Secret object where the license key is stored
-  customSecretName: "nri-bundle"
+  customSecretName: ""
   # -- Key in the Secret object where the license key is stored
-  customSecretLicenseKey: "license"
+  customSecretLicenseKey: ""
 
   # -- Additional labels for chart objects
   labels: {}
