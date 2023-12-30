@@ -58,9 +58,9 @@ global:
   # -- The license key for your New Relic Account. This will be preferred configuration option if both `insightsKey` and `customSecret` are specified.
   insightsKey: ""
   # -- Name of the Secret object where the license key is stored
-  customSecretName: ""
+  customSecretName: "nri-bundle"
   # -- Key in the Secret object where the license key is stored
-  customSecretLicenseKey: ""
+  customSecretLicenseKey: "license"
 
   # -- Additional labels for chart objects
   labels: {}
