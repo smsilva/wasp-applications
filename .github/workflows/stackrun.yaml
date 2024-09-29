@@ -1,0 +1,32 @@
+name: terraform-packager/stackrun
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'stacks/azure-null-resource/**'
+
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - main
+    paths:
+      - 'stacks/azure-null-resource/**'
+
+  workflow_dispatch:
+
+jobs:
+  execution:
+    name: azure-null-resource-global
+    uses: ./.github/workflows/stackrun.yaml
+    secrets: inherit
+    with:
+      variables-directory: stacks/azure-null-resource
+      variables-file: terraform.tfvars
+      instance-name: global
+      image: silviosilva/azure-null-resource:0.34.0
+      arm-as-user: false
+      debug-level: 2

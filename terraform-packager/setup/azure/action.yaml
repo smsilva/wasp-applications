@@ -1,0 +1,85 @@
+name: terraform-packager/setup/azure
+
+inputs:
+  arm-tenant-id:
+    description: 'Azure Tenant ID'
+    required: true
+
+  arm-subscription-id:
+    description: 'Azure Subscription ID'
+    required: true
+
+  arm-client-id:
+    description: 'Azure Client ID'
+    required: true
+
+  arm-client-secret:
+    description: 'Azure Client Secret'
+    required: true
+
+  arm-storage-account-name:
+    description: 'Azure Storage Account Name'
+    required: true
+
+  arm-storage-account-container-name:
+    description: 'Azure Storage Account Container Name'
+    required: true
+
+  arm-access-key:
+    description: 'Azure Storage Account Access Key'
+    required: true
+
+  arm-as-user:
+    description: 'Logon to azure as user'
+    required: true
+    default: false
+
+runs:
+  using: composite
+
+  steps:
+    - id: arm-variables-set
+      shell: bash
+      env:
+        ARM_TENANT_ID: ${{ inputs.arm-tenant-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.arm-subscription-id }}
+        ARM_CLIENT_ID: ${{ inputs.arm-client-id }}
+        ARM_CLIENT_SECRET: ${{ inputs.arm-client-secret }}
+        ARM_STORAGE_ACCOUNT_NAME: ${{ inputs.arm-storage-account-name }}
+        ARM_STORAGE_ACCOUNT_CONTAINER_NAME: ${{ inputs.arm-storage-account-container-name }}
+        ARM_ACCESS_KEY: ${{ inputs.arm-access-key }}
+        ARM_AS_USER: ${{ inputs.arm-as-user }}
+      run: |
+        echo "ARM_TENANT_ID=${ARM_TENANT_ID}"                                           >> $GITHUB_ENV
+        echo "ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID}"                               >> $GITHUB_ENV
+        echo "ARM_STORAGE_ACCOUNT_NAME=${ARM_STORAGE_ACCOUNT_NAME}"                     >> $GITHUB_ENV
+        echo "ARM_STORAGE_ACCOUNT_CONTAINER_NAME=${ARM_STORAGE_ACCOUNT_CONTAINER_NAME}" >> $GITHUB_ENV
+        echo "ARM_ACCESS_KEY=${ARM_ACCESS_KEY}"                                         >> $GITHUB_ENV
+        echo "ARM_AS_USER=${ARM_AS_USER}"                                               >> $GITHUB_ENV
+
+        if [ ! "${ARM_AS_USER}" = "true" ]; then
+          echo "ARM_CLIENT_ID=${ARM_CLIENT_ID}"         >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET}" >> $GITHUB_ENV
+        else
+          echo "ARM_CLIENT_ID=asuser"     >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=asuser" >> $GITHUB_ENV
+        fi
+
+    - id: arm-variables-show
+      shell: bash
+      run: |
+        echo "ARM_SUBSCRIPTION_ID................: ${ARM_SUBSCRIPTION_ID}"
+        echo "ARM_TENANT_ID......................: ${ARM_TENANT_ID}"
+        echo "ARM_CLIENT_ID......................: ${ARM_CLIENT_ID}"
+        echo "ARM_CLIENT_SECRET..................: ${ARM_CLIENT_SECRET:0:3}"
+        echo "ARM_AS_USER........................: ${ARM_AS_USER}"
+        echo "ARM_STORAGE_ACCOUNT_NAME...........: ${ARM_STORAGE_ACCOUNT_NAME}"
+        echo "ARM_STORAGE_ACCOUNT_CONTAINER_NAME.: ${ARM_STORAGE_ACCOUNT_CONTAINER_NAME}"
+
+        if [ -n "${ARM_ACCESS_KEY}" ]; then
+          echo "ARM_ACCESS_KEY.....................: ${ARM_ACCESS_KEY:0:3}"
+        else
+          if [ -n "${ARM_SAS_TOKEN}" ]; then
+            echo "ARM_SAS_TOKEN......................: ${ARM_SAS_TOKEN:0:71}"
+          fi
+        fi

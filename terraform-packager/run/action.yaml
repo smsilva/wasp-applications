@@ -1,0 +1,174 @@
+name: terraform-packager/run
+
+inputs:
+  image:
+    description: Stack image
+    type: string
+    required: true
+
+  instance-name:
+    description: Stack instance name
+    type: string
+    default: default
+
+  command:
+    description: |
+      Terraform commands like:
+        plan -var-file=/opt/variables/terraform.auto.tfvars
+        apply -auto-approve
+        destroy -auto-approve
+    type: string
+    default: plan
+
+  variables-directory:
+    description: |
+      Directory where the variables files are located.
+
+      It will be used to volume /opt/variables folder inside the container.
+    type: string
+    default: /tmp/stack/variables
+
+  pull:
+    description: Pull the image
+    type: boolean
+    default: true
+
+  upload-artifact:
+    description: Upload files as artifact
+    type: boolean
+    default: true
+
+  upload-artifact-name:
+    description: Artifact name
+    type: string
+    default: terraform-logs
+
+  debug-level:
+    description: Debug level from 0 to 3
+    type: number
+    default: 1
+
+outputs:
+  result-code:
+    description: Stack run result code
+    value: ${{ steps.stack-run.outputs.result-code }}
+
+  pull-result-code:
+    description: Stack image pull result code
+    value: ${{ steps.stack-image-pull.outputs.result-code }}
+
+  artifact-name:
+    description: Artifact name
+    value: ${{ steps.stack-run.outputs.artifactname }}
+
+runs:
+  using: composite
+
+  steps:
+    - id: terraform-packager-setup
+      uses: CI-T-HyperX/flow-actions/stack/setup@main
+
+    - id: variables-set
+      shell: bash
+      env:
+        STACK_IMAGE: ${{ inputs.image }}
+        STACK_INSTANCE_NAME: ${{ inputs.instance-name }}
+        STACK_IMAGE_PULL: ${{ inputs.pull }}
+        STACK_LOGS_DIRECTORY: ${{ github.workspace }}/logs
+        TERRAFORM_COMMAND: ${{ inputs.command }}
+        DEBUG_LEVEL: ${{ inputs.debug-level }}
+      run: |
+        mkdir -p ${STACK_LOGS_DIRECTORY}
+
+        cat <<EOF >> $GITHUB_ENV
+        STACK_IMAGE=${STACK_IMAGE}
+        STACK_INSTANCE_NAME=${STACK_INSTANCE_NAME}
+        STACK_IMAGE_PULL=${STACK_IMAGE_PULL}
+        STACK_LOGS_DIRECTORY=${STACK_LOGS_DIRECTORY}
+        STACK_LOG_FILE=${STACK_LOGS_DIRECTORY}/output.log
+        STACK_LOG_ERROR_FILE=${STACK_LOGS_DIRECTORY}/error.log
+        TERRAFORM_COMMAND=${TERRAFORM_COMMAND}
+        TERRAFORM_VARIABLES_FILE=${TERRAFORM_VARIABLES_FILE}
+        DEBUG_LEVEL=${DEBUG_LEVEL}
+        EOF
+
+    - id: variables-show
+      shell: bash
+      run: |
+        cat <<EOF
+        STACK_IMAGE..............: ${STACK_IMAGE}
+        STACK_IMAGE_PULL.........: ${STACK_IMAGE_PULL}
+        STACK_INSTANCE_NAME......: ${STACK_INSTANCE_NAME}
+        STACK_LOGS_DIRECTORY.....: ${STACK_LOGS_DIRECTORY}
+        STACK_LOG_FILE...........: ${STACK_LOG_FILE}
+        STACK_LOG_ERROR_FILE.....: ${STACK_LOG_ERROR_FILE}
+        TERRAFORM_COMMAND........: ${TERRAFORM_COMMAND}
+        DEBUG_LEVEL..............: ${DEBUG_LEVEL}
+        EOF
+
+    - id: stack-image-pull
+      if: ${{ inputs.pull == 'true' }}
+      shell: bash
+      run: |
+        echo "::group::Pulling ${STACK_IMAGE} image"
+        
+        docker pull ${STACK_IMAGE}
+
+        RESULT_CODE=$?
+        
+        echo '::endgroup::'
+        
+        echo "result-code=${RESULT_CODE?}" | tee -a $GITHUB_OUTPUT
+
+    - id: stack-run
+      continue-on-error: true
+      shell: bash
+      env:
+        LOCAL_TERRAFORM_VARIABLES_DIRECTORY: ${{ inputs.variables-directory }}
+      run: |
+        #!/bin/bash
+        set +u # Undefined variables are not errors
+        set +e # Errors in pipelines are not errors (need this to get the error but not fail the script until upload logs)
+  
+        # Unset ARM_CLIENT_ID and ARM_CLIENT_SECRET if ARM_CLIENT_ID is empty (login as user)
+        if [[ -z "${ARM_CLIENT_ID}" ]] || [[ "${ARM_CLIENT_ID}" = "asuser" ]]; then
+          unset ARM_CLIENT_ID
+          unset ARM_CLIENT_SECRET
+        fi
+
+        env DEBUG=${DEBUG_LEVEL:-1} stackrun ${STACK_IMAGE} ${TERRAFORM_COMMAND} > >(tee "${STACK_LOG_FILE}") 2> >(tee "${STACK_LOG_ERROR_FILE}")
+
+        RESULT_CODE=$?
+
+        # Check if the error log file is not empty (-s = File Size is > 0 bytes)
+        if [[ -s "${STACK_LOG_ERROR_FILE}" ]]; then
+          echo "Errors log from ${STACK_LOG_ERROR_FILE} [RESULT_CODE=${RESULT_CODE}]:"
+
+          # Force the result code to 211 when there are errors
+          if [[ "${RESULT_CODE}" == "0" ]]; then
+            RESULT_CODE=211
+          fi
+
+          cat "${STACK_LOG_ERROR_FILE}"
+        else
+          echo "No errors from: ${STACK_LOG_ERROR_FILE}."
+        fi
+
+        echo "result-code=${RESULT_CODE}" >> $GITHUB_OUTPUT
+
+    - id: upload-artifact
+      if: ${{ inputs.upload-artifact == 'true' }}
+      name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.upload-artifact-name }}
+        path: |
+          ${{ github.workspace }}/logs
+
+    - id: stack-run-result
+      shell: bash
+      env:
+        RESULT_CODE: ${{ steps.stack-run.outputs.result-code }}
+      run: |
+        echo "Returning result code: ${RESULT_CODE}"
+        exit ${RESULT_CODE}

@@ -1,0 +1,21 @@
+name: terraform-packager/setup
+
+inputs:
+  version:
+    description: terraform-packager version
+    default: 1.0.0
+
+runs:
+  using: composite
+
+  steps:
+    - id: checkout
+      uses: actions/checkout@v4
+      with:
+        repository: smsilva/terraform-packager
+        ref: ${{ inputs.version }}
+        path: terraform-packager
+
+    - id: setup-path
+      shell: bash
+      run: echo "${{ github.workspace }}/terraform-packager/scripts" >> $GITHUB_PATH
