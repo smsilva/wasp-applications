@@ -1,0 +1,66 @@
+name: azure/logon
+
+description: Azure Logon
+
+inputs:
+  client-id:
+    description: Client ID
+    required: true
+
+  client-secret:
+    description: Client Secret
+    required: true
+
+  tenant-id:
+    description: Tenant ID
+    required: true
+
+  subscription-id:
+    description: Subscription ID
+    required: true
+
+  as-user:
+    description: Logon as User
+    default: false
+
+runs:
+  using: composite
+
+  steps:
+    - id: show-parameters
+      shell: bash
+      env:
+        ARM_TENANT_ID:       ${{ inputs.tenant-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
+        ARM_CLIENT_ID:       ${{ inputs.client-id }}
+        ARM_CLIENT_SECRET:   ${{ inputs.client-secret }}
+      run: |
+        echo "ARM_TENANT_ID............: ${ARM_TENANT_ID}"
+        echo "ARM_SUBSCRIPTION_ID......: ${ARM_SUBSCRIPTION_ID}"
+        echo "ARM_CLIENT_ID............: ${ARM_CLIENT_ID}"
+        echo "ARM_CLIENT_SECRET........: ${ARM_CLIENT_SECRET:0:3}"
+
+    - id: service-principal-logon
+      if: ${{ inputs.as-user != 'true' }}
+      shell: bash
+      env:
+        ARM_TENANT_ID:       ${{ inputs.tenant-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
+        ARM_CLIENT_ID:       ${{ inputs.client-id }}
+        ARM_CLIENT_SECRET:   ${{ inputs.client-secret }}
+      run: ${{ github.action_path }}/logon-as-service-principal        
+
+    - id: logon-as-user
+      if: ${{ inputs.as-user == 'true' }}
+      shell: bash
+      env:
+        ARM_TENANT_ID:       ${{ inputs.tenant-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
+        ARM_CLIENT_ID:       ${{ inputs.client-id }}
+        ARM_CLIENT_SECRET:   ${{ inputs.client-secret }}
+      run: ${{ github.action_path }}/logon-as-user
+
+    - id: show-account
+      shell: bash
+      run: |
+        az account show

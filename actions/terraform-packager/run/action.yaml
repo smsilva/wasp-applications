@@ -66,7 +66,7 @@ runs:
 
   steps:
     - id: terraform-packager-setup
-      uses: CI-T-HyperX/flow-actions/stack/setup@main
+      uses: smsilva/wasp-gitops/actions/terraform-packager/setup@main
 
     - id: variables-set
       shell: bash

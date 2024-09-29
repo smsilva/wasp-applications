@@ -1,4 +1,4 @@
-name: terraform-packager/stackrun
+name: cd/azure-null-resource/global
 
 on:
   push:
@@ -21,7 +21,7 @@ on:
 jobs:
   execution:
     name: azure-null-resource-global
-    uses: ./.github/workflows/stackrun.yaml
+    uses: ./.github/workflows/cd-terraform-packager.yaml
     secrets: inherit
     with:
       variables-directory: stacks/azure-null-resource

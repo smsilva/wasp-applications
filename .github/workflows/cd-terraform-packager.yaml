@@ -1,0 +1,106 @@
+name: cd-terraform-packager
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: Stack Image
+        type: string
+        required: true
+
+      instance-name:
+        description: Stack Instance name
+        type: string
+        default: default
+
+      variables-file:
+        description: Variables file name
+        type: string
+        default: terraform.auto.tfvars
+
+      variables-directory:
+        description: Directory where the variables files are located
+        type: string
+        required: true
+
+      arm-as-user:
+        description: Login to Azure as user
+        required: false
+        type: boolean
+        default: false
+
+      environment:
+        description: Environment to deploy
+        type: string
+        required: false
+        default: default
+
+      action-runner-name:
+        description: Action runner name
+        type: string
+        required: false
+        default: ubuntu-latest
+
+      debug-level:
+        description: Debug level
+        type: number
+        required: false
+        default: 1
+
+jobs:
+  run:
+    runs-on: ${{ inputs.action-runner-name }}
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - id: self-checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: logon-azure
+        name: Azure Logon
+        uses: smsilva/wasp-gitops/actions/azure/logon@main
+        with:
+          tenant-id:       ${{ vars.ARM_TENANT_ID }}
+          subscription-id: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          client-id:       ${{ vars.ARM_CLIENT_ID }}
+          client-secret:   ${{ secrets.ARM_CLIENT_SECRET }}
+          as-user:         ${{ inputs.arm-as-user }}
+
+      - id: terraform-packager-setup-azure
+        name: Stack setup using Azure credentials
+        uses: smsilva/wasp-gitops/actions/terraform-packager/setup/azure@main
+        with:
+          arm-tenant-id: ${{ vars.ARM_TENANT_ID }}
+          arm-subscription-id: ${{ vars.ARM_SUBSCRIPTION_ID }}
+          arm-client-id: ${{ vars.ARM_CLIENT_ID }}
+          arm-client-secret: ${{ secrets.ARM_CLIENT_SECRET }}
+          arm-storage-account-name: ${{ vars.ARM_STORAGE_ACCOUNT_NAME }}
+          arm-storage-account-container-name: ${{ vars.ARM_STORAGE_ACCOUNT_CONTAINER_NAME }}
+          arm-access-key: ${{ secrets.ARM_ACCESS_KEY }}
+          arm-as-user: ${{ inputs.arm-as-user }}
+
+      - id: terraform-packager-plan
+        name: terraform-packager plan ${{ inputs.image }}
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: smsilva/wasp-gitops/actions/terraform-packager/run@main
+        with:
+          image: ${{ inputs.image }}
+          instance-name: ${{ inputs.instance-name }}
+          command: plan -no-color -var-file=/opt/variables/${{ inputs.variables-file }}
+          variables-directory: ${{ github.workspace }}/${{ inputs.variables-directory }}
+          upload-artifact-name: terraform-plan-logs
+          debug-level: ${{ inputs.debug-level }}
+
+      - id: terraform-packager-apply
+        name: terraform-packager apply ${{ inputs.image }}
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: smsilva/wasp-gitops/actions/terraform-packager/run@main
+        with:
+          image: ${{ inputs.image }}
+          instance-name: ${{ inputs.instance-name }}
+          command: apply -auto-approve -no-color -var-file=/opt/variables/${{ inputs.variables-file }}
+          variables-directory: ${{ github.workspace }}/${{ inputs.variables-directory }}
+          upload-artifact-name: terraform-apply-logs
+          debug-level: ${{ inputs.debug-level }}

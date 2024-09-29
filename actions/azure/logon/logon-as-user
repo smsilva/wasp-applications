@@ -1,0 +1,12 @@
+#! /bin/bash
+az login --tenant ${ARM_TENANT_ID}
+az account set --subscription "${ARM_SUBSCRIPTION_ID?}"
+
+AZURE_CREDENTIALS_DIRECTORY="${HOME}/.azure"
+AZURE_ACCESS_TOKEN_FILE="${AZURE_CREDENTIALS_DIRECTORY}/access_token.json"
+
+mkdir -p "${AZURE_CREDENTIALS_DIRECTORY?}"
+
+az account get-access-token > "${AZURE_ACCESS_TOKEN_FILE?}"
+
+echo "AZURE_ACCESS_TOKEN_FILE=${TF_PACKAGER_AZURE_ACCESS_TOKEN_FILE}" | tee -a ${GITHUB_ENV}
