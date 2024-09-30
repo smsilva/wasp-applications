@@ -27,6 +27,6 @@ jobs:
       variables-directory: stacks/azure-null-resource
       variables-file: terraform.tfvars
       instance-name: global
-      image: silviosilva/azure-null-resource:0.34.0
+      image: silviosilva/azure-null-resource:latest
       arm-as-user: false
       debug-level: 2
